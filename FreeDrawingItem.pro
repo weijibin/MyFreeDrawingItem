@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,10 +25,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        widget.cpp
+        widget.cpp \
+    mygraphicsview.cpp \
+    FreeDrawingItem/freedrawingitem.cpp \
+    FreeDrawingItem/customitem.cpp \
+    FreeDrawingItem/anchorpointitem.cpp \
+    FreeDrawingItem/controlpointitem.cpp \
+    FreeDrawingItem/controllineitem.cpp
 
 HEADERS += \
-        widget.h
+        widget.h \
+    mygraphicsview.h \
+    FreeDrawingItem/freedrawingitem.h \
+    FreeDrawingItem/customitem.h \
+    FreeDrawingItem/anchorpointitem.h \
+    FreeDrawingItem/controlpointitem.h \
+    FreeDrawingItem/controllineitem.h \
+    FreeDrawingItem/anchorpointinfo.h
 
 FORMS += \
         widget.ui

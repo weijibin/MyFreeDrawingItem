@@ -2,6 +2,9 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QGraphicsScene>
+
+class MyGraphicsView;
 
 namespace Ui {
 class Widget;
@@ -14,6 +17,10 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
+
+private:
+    QGraphicsScene m_scene;
+    MyGraphicsView *m_view;
 
 private:
     Ui::Widget *ui;
