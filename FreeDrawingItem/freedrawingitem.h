@@ -59,9 +59,11 @@ private:
 
 private:
 //    QVector<QPainterPath> m_subPaths;
+    // sub paths
     QVector<QGraphicsPathItem> m_subPathItems;
 
 //    QVector<AnchorPointInfo> m_AnchorPoints;
+    // anchor info
     QVector<AnchorPointItem> m_AnchorPointItems;
 };
 
