@@ -16,8 +16,18 @@ public:
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+    // path
+    QPainterPath getPath(){return QPainterPath();}
+
+    // show   hide
+    void show(){setVisible(true);}
+    void hide(){setVisible(false);}
+
     // clone
     FreeDrawingItem * clone();
+
+    // start create
+    void startCreate(){}
 
     // creating
     void downWhenCreating(QPointF point);
