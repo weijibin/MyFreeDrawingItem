@@ -4,16 +4,20 @@
 #include <QGraphicsItem>
 #include <QPointF>
 #include "anchorpointinfo.h"
-#include "customitem.h"
 #include "anchorpointitem.h"
 
 class FreeDrawingItem: public QGraphicsItem
 {
 public:
-    FreeDrawingItem(QGraphicsItem *parent);
+    FreeDrawingItem(QGraphicsItem *parent=nullptr);
+    FreeDrawingItem(const FreeDrawingItem &item);
+
 
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    // clone
+    FreeDrawingItem * clone();
 
     // creating
     void downWhenCreating(QPointF point);

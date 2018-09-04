@@ -1,6 +1,11 @@
 #include "freedrawingitem.h"
 
-FreeDrawingItem::FreeDrawingItem(QGraphicsItem *parent)
+FreeDrawingItem::FreeDrawingItem(QGraphicsItem *parent):QGraphicsItem(parent)
+{
+
+}
+
+FreeDrawingItem::FreeDrawingItem(const FreeDrawingItem &item)
 {
 
 }
@@ -16,6 +21,11 @@ void FreeDrawingItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
 }
 
+//clone
+FreeDrawingItem * FreeDrawingItem::clone()
+{
+    return new FreeDrawingItem(*this);
+}
 
 // creating
 void FreeDrawingItem::downWhenCreating(QPointF point)
