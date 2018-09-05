@@ -55,7 +55,11 @@ protected:
     void moveWhenEditing(QPointF point);
     void upWhenEditing(QPointF point);
 
+    void updateBoundingRect();
+
 private:
+
+    QRectF m_boundingRect;
 
     QPainterPath m_path;
 

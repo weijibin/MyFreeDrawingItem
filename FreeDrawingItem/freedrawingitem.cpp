@@ -1,6 +1,7 @@
 #include "freedrawingitem.h"
 #include <QPainter>
 #include <QPainterPath>
+#include <QGraphicsScene>
 
 FreeDrawingItem::FreeDrawingItem(QGraphicsItem *parent):QGraphicsItem(parent)
 {
@@ -17,6 +18,13 @@ QRectF FreeDrawingItem::boundingRect() const
 {
     QRectF rect = childrenBoundingRect();
     return rect;
+}
+
+void FreeDrawingItem::updateBoundingRect()
+{
+    prepareGeometryChange();
+    m_boundingRect = childrenBoundingRect();
+//    this->scene()->update();
 }
 
 void FreeDrawingItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -67,7 +75,7 @@ void FreeDrawingItem::startCreate(QPointF point)
     itemLast->setPos(pos);
     m_AnchorPointItems.append(itemLast);
 
-    update();
+    updateBoundingRect();
 }
 
 // creating
@@ -89,7 +97,7 @@ void FreeDrawingItem::downWhenCreating(QPointF point)
     itemLast->setPos(pos);
     m_AnchorPointItems.append(itemLast);
 
-    update();
+    updateBoundingRect();
 }
 
 void FreeDrawingItem::moveWhenCreating(QPointF point)
@@ -105,12 +113,12 @@ void FreeDrawingItem::moveWhenCreating(QPointF point)
         m_AnchorPointItems.last()->setPos(point);
     }
 
-    update(boundingRect());
+    updateBoundingRect();
 }
 
 void FreeDrawingItem::upWhenCreating(QPointF point)
 {
-    update();
+    updateBoundingRect();
 }
 
 // end creating
