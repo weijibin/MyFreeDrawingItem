@@ -85,7 +85,7 @@ void FreeDrawingItem::startCreate(QPointF point)
 void FreeDrawingItem::downWhenCreating(QPointF point)
 {
     QPointF pos = point;
-    m_AnchorPointItems.last()->setPos(point);
+    m_AnchorPointItems.last()->setAnchorPos(point);
 
     // generate subPath
     {
@@ -113,7 +113,7 @@ void FreeDrawingItem::moveWhenCreating(QPointF point)
         path.lineTo(point);
         m_subPaths.last() = path;
 
-        m_AnchorPointItems.last()->setPos(point);
+        m_AnchorPointItems.last()->setAnchorPos(point);
     }
 
     updateBoundingRect();

@@ -2,16 +2,19 @@
 #include <QPainter>
 #include <QPen>
 
-AnchorPointItem::AnchorPointItem(QGraphicsItem *parent) : CustomItem(parent)
+AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
 {
     m_radius = 4;
     this->setBoundingBox(QRectF(-1*m_radius,-1*m_radius,2*m_radius,2*m_radius));
 
-    m_preCtrlPtnItem.setParentItem(parent);
-    m_postCtrlPtnItem.setParentItem(parent);
+
 
     m_postLineItem.setParentItem(parent);
     m_preLineItem.setParentItem(parent);
+    m_preCtrlPtnItem.setParentItem(parent);
+    m_postCtrlPtnItem.setParentItem(parent);
+
+    this->setParentItem(parent);
 }
 
 void AnchorPointItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

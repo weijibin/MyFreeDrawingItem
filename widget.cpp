@@ -1,15 +1,12 @@
 #include "widget.h"
-#include "ui_widget.h"
 #include "mygraphicsview.h"
 
 #include <QGraphicsRectItem>
 #include <QHBoxLayout>
 
 Widget::Widget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Widget)
+    QWidget(parent)
 {
-    ui->setupUi(this);
 
     m_view = new MyGraphicsView(this);
     QHBoxLayout * layout = new QHBoxLayout;
@@ -23,5 +20,5 @@ Widget::Widget(QWidget *parent) :
 
 Widget::~Widget()
 {
-    delete ui;
+
 }
