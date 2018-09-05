@@ -3,11 +3,11 @@
 #include <QPen>
 
 AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
+    : m_preCtrlPtnItem(*(new ControlPointItem)),m_postCtrlPtnItem(*(new ControlPointItem))
+    , m_preLineItem(*(new ControlLineItem)),m_postLineItem(*(new ControlLineItem))
 {
     m_radius = 4;
     this->setBoundingBox(QRectF(-1*m_radius,-1*m_radius,2*m_radius,2*m_radius));
-
-
 
     m_postLineItem.setParentItem(parent);
     m_preLineItem.setParentItem(parent);
@@ -15,6 +15,19 @@ AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     m_postCtrlPtnItem.setParentItem(parent);
 
     this->setParentItem(parent);
+}
+
+AnchorPointItem::~AnchorPointItem()
+{
+
+}
+
+void AnchorPointItem::deleteCtrl()
+{
+    delete &m_preCtrlPtnItem;
+    delete &m_preLineItem;
+    delete &m_postCtrlPtnItem;
+    delete &m_postLineItem;
 }
 
 void AnchorPointItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

@@ -11,6 +11,10 @@ class AnchorPointItem : public CustomItem
 public:
     AnchorPointItem(QGraphicsItem *parent = nullptr);
 
+    virtual ~AnchorPointItem();
+
+    void deleteCtrl();
+
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR) override;
 
     const  AnchorPointInfo & getPointInfo()  const { return m_info;}
@@ -26,11 +30,11 @@ private:
 
     AnchorPointInfo m_info;
 
-    ControlLineItem m_preLineItem;
-    ControlPointItem m_preCtrlPtnItem;
+    ControlLineItem &m_preLineItem;
+    ControlPointItem &m_preCtrlPtnItem;
 
-    ControlLineItem m_postLineItem;
-    ControlPointItem m_postCtrlPtnItem;
+    ControlLineItem &m_postLineItem;
+    ControlPointItem &m_postCtrlPtnItem;
 };
 
 #endif // ANCHORPOINTITEM_H

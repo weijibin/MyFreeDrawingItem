@@ -135,8 +135,9 @@ void FreeDrawingItem::endCreate()
     if(!m_AnchorPointItems.isEmpty())
     {
 //        qDebug()<<m_AnchorPointItems.count();
-        QGraphicsItem * ptr = m_AnchorPointItems.takeLast();
+        AnchorPointItem * ptr = m_AnchorPointItems.takeLast();
         ptr->setParentItem(nullptr);
+        ptr->deleteCtrl();
         delete ptr;
 //        qDebug()<<m_AnchorPointItems.count();
     }

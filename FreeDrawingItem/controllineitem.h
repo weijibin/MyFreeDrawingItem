@@ -9,6 +9,8 @@ class ControlLineItem : public CustomItem
 public:
     ControlLineItem(QGraphicsItem *parent = nullptr);
 
+    virtual ~ControlLineItem();
+
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR) override;
 
     void setLineInfo(const QPointF &start, const QPointF &end);
