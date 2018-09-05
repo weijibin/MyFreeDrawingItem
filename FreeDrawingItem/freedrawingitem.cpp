@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QGraphicsScene>
+#include <QDebug>
 
 FreeDrawingItem::FreeDrawingItem(QGraphicsItem *parent):QGraphicsItem(parent)
 {
@@ -31,8 +32,8 @@ void FreeDrawingItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 {
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(Qt::red);
-    painter->drawRect(boundingRect());
+//    painter->setPen(Qt::red);
+//    painter->drawRect(boundingRect());
     painter->setPen(Qt::darkGreen);
     foreach (QPainterPath path, m_subPaths)
     {
@@ -124,7 +125,21 @@ void FreeDrawingItem::upWhenCreating(QPointF point)
 // end creating
 void FreeDrawingItem::endCreate()
 {
+    if(!m_subPaths.isEmpty())
+    {
+        m_subPaths.removeLast();
+    }
 
+    if(!m_AnchorPointItems.isEmpty())
+    {
+//        qDebug()<<m_AnchorPointItems.count();
+        QGraphicsItem * ptr = m_AnchorPointItems.takeLast();
+        ptr->setParentItem(nullptr);
+        delete ptr;
+//        qDebug()<<m_AnchorPointItems.count();
+    }
+
+    updateBoundingRect();
 }
 
 // editing

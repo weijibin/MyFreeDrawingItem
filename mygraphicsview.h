@@ -17,6 +17,8 @@ protected:
 private:
     FreeDrawingItem * m_freeItem = nullptr;
 
+    bool m_isInCreating = false;
+
 };
 
 #endif // MYGRAPHICSVIEW_H
