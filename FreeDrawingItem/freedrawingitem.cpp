@@ -60,9 +60,11 @@ FreeDrawingItem * FreeDrawingItem::clone()
 
 void FreeDrawingItem::startCreate(QPointF point)
 {
-    AnchorPointItem * item = new AnchorPointItem(this);
     QPointF pos = point;
-    item->setPos(pos);
+
+    AnchorPointItem * item = new AnchorPointItem(this);
+    item->setAnchorPos(pos);
+
     m_AnchorPointItems.append(item);
 
 
@@ -73,7 +75,7 @@ void FreeDrawingItem::startCreate(QPointF point)
 
     // next anchor
     AnchorPointItem * itemLast = new AnchorPointItem(this);
-    itemLast->setPos(pos);
+    itemLast->setAnchorPos(pos);
     m_AnchorPointItems.append(itemLast);
 
     updateBoundingRect();
@@ -95,7 +97,7 @@ void FreeDrawingItem::downWhenCreating(QPointF point)
     }
     // next anchor
     AnchorPointItem * itemLast = new AnchorPointItem(this);
-    itemLast->setPos(pos);
+    itemLast->setAnchorPos(pos);
     m_AnchorPointItems.append(itemLast);
 
     updateBoundingRect();
