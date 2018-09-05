@@ -17,7 +17,7 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     // path
-    QPainterPath getPath(){return QPainterPath();}
+    QPainterPath getPath();
 
     // show   hide
     void show(){setVisible(true);}
@@ -27,44 +27,46 @@ public:
     FreeDrawingItem * clone();
 
     // start create
-    void startCreate(){}
-
+    void startCreate(QPointF point);
     // creating
     void downWhenCreating(QPointF point);
     void moveWhenCreating(QPointF point);
     void upWhenCreating(QPointF point);
-
     // end creating
     void endCreate();
 
+    // translate item  or  call in command
+    void translateItem(QPointF offset);
+
+    // add command notify outside
+    void addCommandToSlide(/*HHCommand * command*/){}
+
+    // move the end anchor point  notify outside
+    void moveShadow(QPointF offset){}
+
+    // save
+    void getJSONObj( QJsonObject& jsonObj );
+    // restore
+    void fromJSONObj(QJsonObject& jsonObj );
+
+protected:
     // editing
     void downWhenEditing(QPointF point);
     void moveWhenEditing(QPointF point);
     void upWhenEditing(QPointF point);
 
-    // translate item  or  call in command
-    void translateItem(QPointF offset);
-
-    // add command
-//    void addCommandToSlide(HHCommand * command);
-
-    // save
-    void getJSONObj( QJsonObject& jsonObj );
-
-    // restore
-    void fromJSONObj(QJsonObject& jsonObj );
-
 private:
 
+    QPainterPath m_path;
 
-private:
     QVector<QPainterPath> m_subPaths;
     // sub paths
-    QVector<QGraphicsPathItem> m_subPathItems;
+//    QVector<QGraphicsPathItem> m_subPathItems;
 
-    QVector<AnchorPointInfo> m_AnchorPoints;
+//    QVector<AnchorPointInfo> m_AnchorPoints;
+
     // anchor info
-    QVector<AnchorPointItem> m_AnchorPointItems;
+    QVector<AnchorPointItem *> m_AnchorPointItems;
 };
 
 #endif // FREEDRAWINGITEM_H
