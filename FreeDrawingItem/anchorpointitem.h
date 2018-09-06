@@ -2,6 +2,8 @@
 #define ANCHORPOINTITEM_H
 #include "customitem.h"
 #include <QPen>
+#include <QGraphicsSceneEvent>
+#include <QGraphicsSceneMouseEvent>
 #include "anchorpointinfo.h"
 #include "controlpointitem.h"
 #include "controllineitem.h"
@@ -26,6 +28,12 @@ public:
     void setCtrlVisible(bool visible);
 
     void updatePropertyByInfo();
+
+protected:
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
 private:
     QPen m_pen;
     qreal m_radius;

@@ -206,6 +206,12 @@ void FreeDrawingItem::endCreate()
 
     updateBoundingRect();
     synchronizeAnchorInfo(); // 创建完成后同步 锚点信息
+
+    // hide control points
+//    foreach (AnchorPointItem *item, m_AnchorPointItems)
+//    {
+//        item->setCtrlVisible(false);
+//    }
 }
 
 void FreeDrawingItem::synchronizeAnchorInfo()

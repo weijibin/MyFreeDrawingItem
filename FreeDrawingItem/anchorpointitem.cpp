@@ -1,6 +1,7 @@
 #include "anchorpointitem.h"
 #include <QPainter>
 #include <QPen>
+#include <QCursor>
 
 AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     : m_preCtrlPtnItem(*(new ControlPointItem)),m_postCtrlPtnItem(*(new ControlPointItem))
@@ -15,11 +16,30 @@ AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     m_postCtrlPtnItem.setParentItem(parent);
 
     this->setParentItem(parent);
+
+    setCursor(QCursor(Qt::OpenHandCursor));
+
+    setAcceptHoverEvents(true);
 }
 
 AnchorPointItem::~AnchorPointItem()
 {
 
+}
+
+void AnchorPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mousePressEvent(event);
+}
+
+void AnchorPointItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseMoveEvent(event);
+}
+
+void AnchorPointItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 void AnchorPointItem::deleteCtrl()

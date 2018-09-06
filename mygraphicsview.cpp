@@ -1,10 +1,11 @@
 #include "mygraphicsview.h"
-
 #include <QGraphicsScene>
+#include <QCursor>
 
 MyGraphicsView::MyGraphicsView(QWidget * parent) : QGraphicsView(parent)
 {
     this->setMouseTracking(true);
+    setCursor(QCursor(Qt::ArrowCursor));
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent *event)
@@ -35,7 +36,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
         }
     }
 
-    if(!endCreated)
+//    if(!endCreated)
         QGraphicsView::mousePressEvent(event);
 }
 
@@ -46,7 +47,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         m_freeItem->upWhenCreating(mapToScene(event->pos()));
     }
 
-    if(!endCreated)
+//    if(!endCreated)
         QGraphicsView::mouseReleaseEvent(event);
 }
 
@@ -57,6 +58,6 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
         m_freeItem->moveWhenCreating(mapToScene(event->pos()));
     }
 
-    if(!endCreated)
+//    if(!endCreated)
         QGraphicsView::mouseMoveEvent(event);
 }
