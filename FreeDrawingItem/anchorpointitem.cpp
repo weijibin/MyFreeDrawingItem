@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QPen>
 #include <QCursor>
+#include <QPointF>
 
 AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     : m_preCtrlPtnItem(*(new ControlPointItem)),m_postCtrlPtnItem(*(new ControlPointItem))
@@ -30,10 +31,16 @@ AnchorPointItem::~AnchorPointItem()
 void AnchorPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mousePressEvent(event);
+//    event->accept();
 }
 
 void AnchorPointItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+
+    QPointF nPtn = event->scenePos();
+    m_info.anchorPoint =nPtn;
+    updatePropertyByInfo();
+
     QGraphicsItem::mouseMoveEvent(event);
 }
 

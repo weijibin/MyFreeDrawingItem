@@ -10,6 +10,10 @@ MyGraphicsView::MyGraphicsView(QWidget * parent) : QGraphicsView(parent)
 
 void MyGraphicsView::mousePressEvent(QMouseEvent *event)
 {
+
+    //    if(!endCreated)
+            QGraphicsView::mousePressEvent(event);
+
     if(endCreated)
         return;
 
@@ -36,8 +40,6 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
         }
     }
 
-//    if(!endCreated)
-        QGraphicsView::mousePressEvent(event);
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
