@@ -71,6 +71,9 @@ private:
 
     // anchor info
     QVector<AnchorPointItem *> m_AnchorPointItems;
+
+    bool m_isPressed = false;
+    QPointF m_downPoint;
 };
 
 #endif // FREEDRAWINGITEM_H

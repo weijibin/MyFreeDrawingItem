@@ -56,8 +56,8 @@ void AnchorPointItem::updatePropertyByInfo()
     this->setPos(m_info.anchorPoint);
 
     QPointF pos = m_info.anchorPoint;
-    QPointF prePos = pos + QPointF(-30,-30);
-    QPointF postPos = pos + QPointF(30,30);
+    QPointF prePos = m_info.pre_CtrlPoint;
+    QPointF postPos = m_info.post_CtrlPoint;
 
     m_preCtrlPtnItem.setPos(prePos);
     m_postCtrlPtnItem.setPos(postPos);
@@ -65,23 +65,23 @@ void AnchorPointItem::updatePropertyByInfo()
     m_preLineItem.setLineInfo(pos,prePos);
     m_postLineItem.setLineInfo(pos,postPos);
 
-//    if(m_info.pre_CtrlPoint == QPointF(-10000,-10000))
-//    {
-//        m_preCtrlPtnItem.setVisible(false);
-//        m_preLineItem.setVisible(false);
-//    }
-//    else
+    if(m_info.pre_CtrlPoint == QPointF(-10000,-10000))
+    {
+        m_preCtrlPtnItem.setVisible(false);
+        m_preLineItem.setVisible(false);
+    }
+    else
     {
         m_preCtrlPtnItem.setVisible(true);
         m_preLineItem.setVisible(true);
     }
 
-//    if(m_info.post_CtrlPoint == QPointF(-10000,-10000))
-//    {
-//        m_postCtrlPtnItem.setVisible(false);
-//        m_postLineItem.setVisible(false);
-//    }
-//    else
+    if(m_info.post_CtrlPoint == QPointF(-10000,-10000))
+    {
+        m_postCtrlPtnItem.setVisible(false);
+        m_postLineItem.setVisible(false);
+    }
+    else
     {
         m_postCtrlPtnItem.setVisible(true);
         m_postLineItem.setVisible(true);

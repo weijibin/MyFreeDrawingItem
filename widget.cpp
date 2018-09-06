@@ -13,7 +13,7 @@ Widget::Widget(QWidget *parent) :
     layout->addWidget(m_view);
     this->setLayout(layout);
 
-    m_scene.setSceneRect(-1000,-1000,2000,2000);
+    m_scene.setSceneRect(-250,-250,500,500);
     m_view->setScene(&m_scene);
 //    m_scene.addRect(QRect(0,0,200,50));
 }
