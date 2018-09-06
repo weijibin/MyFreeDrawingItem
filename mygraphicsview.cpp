@@ -9,10 +9,15 @@ MyGraphicsView::MyGraphicsView(QWidget * parent) : QGraphicsView(parent)
 
 void MyGraphicsView::mousePressEvent(QMouseEvent *event)
 {
+    if(endCreated)
+        return;
+
     if(event->button() == Qt::RightButton && m_isInCreating)
     {
         m_freeItem->endCreate();
         m_isInCreating = false;
+
+        endCreated = true;
     }
     else
     {
@@ -30,7 +35,8 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
         }
     }
 
-//    QGraphicsView::mousePressEvent(event);
+    if(!endCreated)
+        QGraphicsView::mousePressEvent(event);
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
@@ -39,7 +45,9 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     {
         m_freeItem->upWhenCreating(mapToScene(event->pos()));
     }
-//    QGraphicsView::mouseReleaseEvent(event);
+
+    if(!endCreated)
+        QGraphicsView::mouseReleaseEvent(event);
 }
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
@@ -48,5 +56,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
     {
         m_freeItem->moveWhenCreating(mapToScene(event->pos()));
     }
-//    QGraphicsView::mouseMoveEvent(event);
+
+    if(!endCreated)
+        QGraphicsView::mouseMoveEvent(event);
 }

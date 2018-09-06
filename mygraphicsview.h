@@ -18,6 +18,7 @@ private:
     FreeDrawingItem * m_freeItem = nullptr;
 
     bool m_isInCreating = false;
+    bool endCreated = false;
 
 };
 
