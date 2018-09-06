@@ -51,6 +51,16 @@ void AnchorPointItem::setPointInfo( const AnchorPointInfo &info)
     updatePropertyByInfo();
 }
 
+void AnchorPointItem::setCtrlVisible(bool visible)
+{
+    m_isCtrlVisible = visible;
+
+    m_preCtrlPtnItem.setVisible(visible);
+    m_preLineItem.setVisible(visible);
+    m_postCtrlPtnItem.setVisible(visible);
+    m_postLineItem.setVisible(visible);
+}
+
 void AnchorPointItem::updatePropertyByInfo()
 {
     this->setPos(m_info.anchorPoint);
@@ -65,7 +75,7 @@ void AnchorPointItem::updatePropertyByInfo()
     m_preLineItem.setLineInfo(pos,prePos);
     m_postLineItem.setLineInfo(pos,postPos);
 
-    if(m_info.pre_CtrlPoint == QPointF(-10000,-10000))
+    if(m_info.pre_CtrlPoint == QPointF(-10000,-10000) || m_isCtrlVisible==false)
     {
         m_preCtrlPtnItem.setVisible(false);
         m_preLineItem.setVisible(false);
@@ -76,7 +86,7 @@ void AnchorPointItem::updatePropertyByInfo()
         m_preLineItem.setVisible(true);
     }
 
-    if(m_info.post_CtrlPoint == QPointF(-10000,-10000))
+    if(m_info.post_CtrlPoint == QPointF(-10000,-10000) || m_isCtrlVisible==false)
     {
         m_postCtrlPtnItem.setVisible(false);
         m_postLineItem.setVisible(false);

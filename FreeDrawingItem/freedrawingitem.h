@@ -57,6 +57,8 @@ protected:
 
     void updateBoundingRect();
 
+    void synchronizeAnchorInfo();
+
 private:
 
     QRectF m_boundingRect;

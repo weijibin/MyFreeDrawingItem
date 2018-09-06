@@ -65,6 +65,8 @@ void FreeDrawingItem::startCreate(QPointF point)
     AnchorPointItem * item = new AnchorPointItem(this);
     item->setAnchorPos(pos);
 
+    item->setCtrlVisible(false);   // 隐藏控制点
+
     m_AnchorPointItems.append(item);
 
 
@@ -89,6 +91,7 @@ void FreeDrawingItem::downWhenCreating(QPointF point)
     m_downPoint = point;
 
     QPointF pos = point;
+
     m_AnchorPointItems.last()->setAnchorPos(point);
 
     // generate subPath
@@ -197,10 +200,41 @@ void FreeDrawingItem::endCreate()
         ptr->setParentItem(nullptr);
         ptr->deleteCtrl();
         delete ptr;
-//        qDebug()<<m_AnchorPointItems.count();
+
+        m_AnchorPointItems.last()->setCtrlVisible(false); //隐藏最后Anchor的控制点
     }
 
     updateBoundingRect();
+    synchronizeAnchorInfo(); // 创建完成后同步 锚点信息
+}
+
+void FreeDrawingItem::synchronizeAnchorInfo()
+{
+    AnchorPointInfo curInfo,nextInfo;
+    int count = m_AnchorPointItems.size();
+    for(int i =  0; i < count-1; i++)
+    {
+        curInfo = m_AnchorPointItems.at(i)->getPointInfo();
+        nextInfo = m_AnchorPointItems.at(i+1)->getPointInfo();
+
+        if(curInfo.post_CtrlPoint == QPointF(-10000,-10000))
+        {
+            curInfo.post_CtrlPoint = nextInfo.pre_CtrlPoint;
+        }
+
+        if(nextInfo.pre_CtrlPoint == QPointF(-10000,-10000))
+        {
+            nextInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
+        }
+
+        m_AnchorPointItems.at(i)->setPointInfo(curInfo);
+        m_AnchorPointItems.at(i+1)->setPointInfo(nextInfo);
+    }
+
+    // 设置最后Anchor的数据
+    curInfo = m_AnchorPointItems.at(count-1)->getPointInfo();
+    curInfo.post_CtrlPoint = QPointF(-10000,-10000);
+    m_AnchorPointItems.at(count-1)->setPointInfo(curInfo);
 }
 
 // editing

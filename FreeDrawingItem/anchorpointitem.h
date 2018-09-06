@@ -23,12 +23,16 @@ public:
 
     void setAnchorPos(QPointF pos);
 
+    void setCtrlVisible(bool visible);
+
     void updatePropertyByInfo();
 private:
     QPen m_pen;
     qreal m_radius;
 
     AnchorPointInfo m_info;
+
+    bool m_isCtrlVisible  = true;
 
     ControlLineItem &m_preLineItem;
     ControlPointItem &m_preCtrlPtnItem;
