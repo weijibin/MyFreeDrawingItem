@@ -12,7 +12,7 @@ public:
     QPointF post_CtrlPoint = QPointF(-10000,-10000); //
 
     //property
-    int state = 0; // 0,1
+    int state = 0; // 0,1   creating: 0 ,  editing:1
 };
 
 #endif // ANCHORPOINTINFO_H

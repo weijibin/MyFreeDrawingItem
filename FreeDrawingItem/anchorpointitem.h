@@ -8,6 +8,8 @@
 #include "controlpointitem.h"
 #include "controllineitem.h"
 
+class FreeDrawingItem;
+
 class AnchorPointItem : public CustomItem
 {
 public:
@@ -26,6 +28,10 @@ public:
     void setAnchorPos(QPointF pos);
 
     void setCtrlVisible(bool visible);
+
+    void setState(int state);
+
+    void setFreeDrawingItem(FreeDrawingItem * item);
 
     void updatePropertyByInfo();
 
@@ -47,6 +53,8 @@ private:
 
     ControlLineItem &m_postLineItem;
     ControlPointItem &m_postCtrlPtnItem;
+
+    FreeDrawingItem * m_DrawingItem = nullptr;
 };
 
 #endif // ANCHORPOINTITEM_H

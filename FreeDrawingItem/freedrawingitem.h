@@ -35,6 +35,8 @@ public:
     // end creating
     void endCreate();
 
+    void changePathByItem(AnchorPointItem* item);
+
     // translate item  or  call in command
     void translateItem(QPointF offset);
 
@@ -59,11 +61,13 @@ protected:
 
     void synchronizeAnchorInfo();
 
+    QPainterPath generatePathByInfo(const AnchorPointInfo & first, const AnchorPointInfo & second);
+
 private:
 
     QRectF m_boundingRect;
 
-    QPainterPath m_path;
+//    QPainterPath m_path;
 
     QVector<QPainterPath> m_subPaths;
     // sub paths

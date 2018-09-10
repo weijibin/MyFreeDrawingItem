@@ -31,4 +31,7 @@ void ControlLineItem::setLineInfo(const QPointF &start, const QPointF &end)
     m_path.swap(QPainterPath());
     m_path.moveTo(start);
     m_path.lineTo(end);
+
+    prepareGeometryChange();
+    this->setBoundingBox(m_path.boundingRect());
 }

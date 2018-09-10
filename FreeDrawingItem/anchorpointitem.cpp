@@ -1,4 +1,5 @@
 #include "anchorpointitem.h"
+#include "freedrawingitem.h"
 #include <QPainter>
 #include <QPen>
 #include <QCursor>
@@ -31,16 +32,34 @@ AnchorPointItem::~AnchorPointItem()
 void AnchorPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mousePressEvent(event);
-//    event->accept();
+
+    if(m_info.state == 1)
+    {
+        event->accept();
+    }
 }
 
 void AnchorPointItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 
-    QPointF nPtn = event->scenePos();
-    m_info.anchorPoint =nPtn;
-    updatePropertyByInfo();
+    if(m_info.state == 1)
+    {
+        QPointF nPtn = event->scenePos();
 
+        QPointF offset = nPtn - m_info.anchorPoint;
+
+        if(m_info.post_CtrlPoint != QPointF(-10000,-10000))
+        {
+            m_info.post_CtrlPoint += offset;
+        }
+        if(m_info.pre_CtrlPoint != QPointF(-10000,-10000))
+        {
+            m_info.pre_CtrlPoint += offset;
+        }
+
+        m_info.anchorPoint =nPtn;
+        updatePropertyByInfo();
+    }
     QGraphicsItem::mouseMoveEvent(event);
 }
 
@@ -88,6 +107,16 @@ void AnchorPointItem::setCtrlVisible(bool visible)
     m_postLineItem.setVisible(visible);
 }
 
+void AnchorPointItem::setState(int state)
+{
+    m_info.state = state;
+}
+
+void AnchorPointItem::setFreeDrawingItem(FreeDrawingItem *item)
+{
+    m_DrawingItem = item;
+}
+
 void AnchorPointItem::updatePropertyByInfo()
 {
     this->setPos(m_info.anchorPoint);
@@ -106,22 +135,39 @@ void AnchorPointItem::updatePropertyByInfo()
     {
         m_preCtrlPtnItem.setVisible(false);
         m_preLineItem.setVisible(false);
+
+//        m_preCtrlPtnItem.setPos(pos);
+//        m_preLineItem.setLineInfo(pos,pos);
     }
     else
     {
         m_preCtrlPtnItem.setVisible(true);
         m_preLineItem.setVisible(true);
+
+//        m_preCtrlPtnItem.setPos(prePos);
+//        m_preLineItem.setLineInfo(pos,prePos);
     }
 
     if(m_info.post_CtrlPoint == QPointF(-10000,-10000) || m_isCtrlVisible==false)
     {
         m_postCtrlPtnItem.setVisible(false);
         m_postLineItem.setVisible(false);
+
+//        m_postCtrlPtnItem.setPos(pos);
+//        m_postLineItem.setLineInfo(pos,pos);
     }
     else
     {
         m_postCtrlPtnItem.setVisible(true);
         m_postLineItem.setVisible(true);
+
+//        m_postCtrlPtnItem.setPos(postPos);
+//        m_postLineItem.setLineInfo(pos,postPos);
+    }
+
+    if(m_DrawingItem && m_info.state == 1)
+    {
+        m_DrawingItem->changePathByItem(this);
     }
 
 }
