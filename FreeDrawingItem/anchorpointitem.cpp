@@ -17,6 +17,12 @@ AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     m_preCtrlPtnItem.setParentItem(parent);
     m_postCtrlPtnItem.setParentItem(parent);
 
+    m_preCtrlPtnItem.setPointItem(this);
+    m_preCtrlPtnItem.setPosType("preCtrl");
+
+    m_postCtrlPtnItem.setPointItem(this);
+    m_postCtrlPtnItem.setPosType("postCtrl");
+
     this->setParentItem(parent);
 
     setCursor(QCursor(Qt::OpenHandCursor));
@@ -116,6 +122,42 @@ void AnchorPointItem::setState(int state)
 void AnchorPointItem::setFreeDrawingItem(FreeDrawingItem *item)
 {
     m_DrawingItem = item;
+}
+
+void AnchorPointItem::updateInfoByPos(const QString &type)
+{
+
+    QPointF pos = m_info.anchorPoint;
+    QPointF prePos = m_preCtrlPtnItem.pos();
+    QPointF postPos = m_postCtrlPtnItem.pos();
+
+    if(m_info.isSymmetrical)  // 对称性处理
+    {
+        if(type == "preCtrl")
+        {
+            QPointF offset = pos-prePos;
+            postPos = pos+offset;
+            m_postCtrlPtnItem.setPos(postPos);
+        }
+        else
+        {
+            QPointF offset = pos-postPos;
+            prePos = pos+offset;
+            m_preCtrlPtnItem.setPos(prePos);
+        }
+    }
+
+    m_info.pre_CtrlPoint = prePos;
+    m_info.post_CtrlPoint = postPos;
+
+
+    m_preLineItem.setLineInfo(pos,prePos);
+    m_postLineItem.setLineInfo(pos,postPos);
+
+    if(m_DrawingItem && m_info.state == 1)
+    {
+        m_DrawingItem->changePathByItem(this);
+    }
 }
 
 void AnchorPointItem::updatePropertyByInfo()

@@ -144,6 +144,10 @@ void FreeDrawingItem::moveWhenCreating(QPointF point)
             QPointF  offset = m_downPoint - point;
             info.pre_CtrlPoint = m_downPoint + offset;
 
+            {
+                info.isSymmetrical = true;
+            }
+
             m_AnchorPointItems.at(size-2)->setPointInfo(info);
 
             if( qAbs(preInfo.post_CtrlPoint.x() +10000) < 1)  // 二阶贝塞尔
@@ -350,6 +354,8 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
 
          if(curInfo.post_Relation)  // update relational anchor point
          {
+             postInfo.isSymmetrical = false;  //设置对称性，对称性被破坏
+
              postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
              m_AnchorPointItems.at(index+1)->setPointInfo(postInfo,false);
          }
@@ -364,6 +370,8 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
 
         if(curInfo.pre_Relation)  // update relational anchor point
         {
+            preInfo.isSymmetrical = false;
+
             preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
             m_AnchorPointItems.at(index-1)->setPointInfo(preInfo,false);
         }
@@ -383,11 +391,15 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
          // update relational anchor point
         if(curInfo.pre_Relation)
         {
+            preInfo.isSymmetrical = false;
+
             preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
             m_AnchorPointItems.at(index-1)->setPointInfo(preInfo,false);
         }
         if(curInfo.post_Relation)
         {
+            postInfo.isSymmetrical = false;
+
             postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
             m_AnchorPointItems.at(index+1)->setPointInfo(postInfo,false);
         }

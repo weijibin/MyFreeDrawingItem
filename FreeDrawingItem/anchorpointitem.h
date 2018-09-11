@@ -35,6 +35,9 @@ public:
 
     void updatePropertyByInfo();
 
+    // update info by controlpoint pos
+    void updateInfoByPos(const QString &type);
+
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
