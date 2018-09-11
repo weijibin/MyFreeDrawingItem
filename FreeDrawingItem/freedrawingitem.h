@@ -35,7 +35,7 @@ public:
     // end creating
     void endCreate();
 
-    void changePathByItem(AnchorPointItem* item);
+    void changePathByItem(AnchorPointItem* item,QString type = "");
 
     // translate item  or  call in command
     void translateItem(QPointF offset);

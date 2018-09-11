@@ -182,7 +182,7 @@ void AnchorPointItem::updateInfoByPos(const QString &type)
 
     if(m_DrawingItem && m_info.state == 1)
     {
-        m_DrawingItem->changePathByItem(this);
+        m_DrawingItem->changePathByItem(this,type);
     }
 }
 

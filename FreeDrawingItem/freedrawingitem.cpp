@@ -337,7 +337,7 @@ QPainterPath FreeDrawingItem::generatePathByInfo(const AnchorPointInfo &first, c
     return path;
 }
 
-void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
+void FreeDrawingItem::changePathByItem(AnchorPointItem *item, QString type)
 {
     int index = m_AnchorPointItems.indexOf(item);
     int count = m_AnchorPointItems.count();
@@ -392,14 +392,16 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
          // update relational anchor point
         if(curInfo.pre_Relation)
         {
-            preInfo.isSymmetrical = false;
+            if(type == "preCtrl")
+                preInfo.isSymmetrical = false;
 
             preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
             m_AnchorPointItems.at(index-1)->setPointInfo(preInfo,false);
         }
         if(curInfo.post_Relation)
         {
-            postInfo.isSymmetrical = false;
+            if(type == "postCtrl")
+                postInfo.isSymmetrical = false;
 
             postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
             m_AnchorPointItems.at(index+1)->setPointInfo(postInfo,false);
