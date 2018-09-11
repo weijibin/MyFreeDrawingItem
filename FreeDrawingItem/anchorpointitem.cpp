@@ -91,10 +91,11 @@ void AnchorPointItem::setAnchorPos(QPointF pos)
     updatePropertyByInfo();
 }
 
-void AnchorPointItem::setPointInfo( const AnchorPointInfo &info)
+void AnchorPointItem::setPointInfo( const AnchorPointInfo &info , bool needUpdate)
 {
     m_info = info;
-    updatePropertyByInfo();
+    if(needUpdate)
+        updatePropertyByInfo();
 }
 
 void AnchorPointItem::setCtrlVisible(bool visible)

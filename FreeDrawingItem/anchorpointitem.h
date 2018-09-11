@@ -23,7 +23,7 @@ public:
 
     const  AnchorPointInfo & getPointInfo()  const { return m_info;}
 
-    void setPointInfo(const AnchorPointInfo &info);
+    void setPointInfo(const AnchorPointInfo &info,bool needUpdate = true);
 
     void setAnchorPos(QPointF pos);
 

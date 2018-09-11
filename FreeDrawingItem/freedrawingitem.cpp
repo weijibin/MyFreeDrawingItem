@@ -243,14 +243,22 @@ void FreeDrawingItem::synchronizeAnchorInfo()
         curInfo = m_AnchorPointItems.at(i)->getPointInfo();
         nextInfo = m_AnchorPointItems.at(i+1)->getPointInfo();
 
-        if(curInfo.post_CtrlPoint == QPointF(-10000,-10000))
+        if(curInfo.post_CtrlPoint == QPointF(-10000,-10000) && nextInfo.pre_CtrlPoint != QPointF(-10000,-10000))
         {
             curInfo.post_CtrlPoint = nextInfo.pre_CtrlPoint;
+            {
+                curInfo.post_Relation = true;
+                nextInfo.pre_Relation = true;
+            }
         }
 
-        if(nextInfo.pre_CtrlPoint == QPointF(-10000,-10000))
+        if(nextInfo.pre_CtrlPoint == QPointF(-10000,-10000) && curInfo.post_CtrlPoint != QPointF(-10000,-10000))
         {
             nextInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
+            {
+                curInfo.post_Relation = true;
+                nextInfo.pre_Relation = true;
+            }
         }
 
         m_AnchorPointItems.at(i)->setPointInfo(curInfo);
@@ -305,26 +313,19 @@ QPainterPath FreeDrawingItem::generatePathByInfo(const AnchorPointInfo &first, c
     QPainterPath path;
     path.moveTo(first.anchorPoint);
 
-    if(first.post_CtrlPoint == QPointF(-10000,-10000))
+    if( first.post_Relation==false && first.post_CtrlPoint == QPointF(-10000,-10000))
     {
-        if(second.pre_CtrlPoint == QPointF(-10000,-10000))  //  line
-        {
-            path.lineTo(second.anchorPoint);
-        }
-        else   // quadratic
-        {
-            path.quadTo(first.post_CtrlPoint,second.anchorPoint);
-        }
+        path.lineTo(second.anchorPoint);
     }
     else
     {
-        if(second.pre_CtrlPoint == QPointF(-10000,-10000))  //  quadratic
+        if(first.post_Relation)
         {
-            path.quadTo(second.pre_CtrlPoint, second.anchorPoint);
+            path.quadTo(first.post_CtrlPoint, second.anchorPoint);
         }
-        else // cubic
+        else
         {
-            path.cubicTo(first.post_CtrlPoint,second.pre_CtrlPoint,second.anchorPoint);
+             path.cubicTo(first.post_CtrlPoint,second.pre_CtrlPoint,second.anchorPoint);
         }
     }
 
@@ -336,8 +337,8 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
     int index = m_AnchorPointItems.indexOf(item);
     int count = m_AnchorPointItems.count();
 
-//    qDebug()<< "FreeDrawingItem::changePathByItem";
-//    qDebug()<< index << count;
+    qDebug()<< "FreeDrawingItem::changePathByItem";
+    qDebug()<< index << count;
 
     if(index == 0)  // begin
     {
@@ -346,6 +347,12 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
 
          QPainterPath path = generatePathByInfo(curInfo,postInfo);
          m_subPaths[index] = path;
+
+         if(curInfo.post_Relation)  // update relational anchor point
+         {
+             postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
+             m_AnchorPointItems.at(index+1)->setPointInfo(postInfo,false);
+         }
     }
     else if(index == count -1)  // end
     {
@@ -354,6 +361,12 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
 
         QPainterPath path = generatePathByInfo(preInfo,curInfo);
         m_subPaths[index-1] = path;
+
+        if(curInfo.pre_Relation)  // update relational anchor point
+        {
+            preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
+            m_AnchorPointItems.at(index-1)->setPointInfo(preInfo,false);
+        }
     }
     else // middle
     {
@@ -367,6 +380,17 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
         QPainterPath path2 = generatePathByInfo(curInfo,postInfo);
         m_subPaths[index] = path2;
 
+         // update relational anchor point
+        if(curInfo.pre_Relation)
+        {
+            preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
+            m_AnchorPointItems.at(index-1)->setPointInfo(preInfo,false);
+        }
+        if(curInfo.post_Relation)
+        {
+            postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
+            m_AnchorPointItems.at(index+1)->setPointInfo(postInfo,false);
+        }
     }
     updateBoundingRect();
 }

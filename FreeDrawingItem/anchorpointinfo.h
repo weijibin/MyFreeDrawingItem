@@ -13,6 +13,9 @@ public:
 
     //property
     int state = 0; // 0,1   creating: 0 ,  editing:1
+
+    bool pre_Relation = false;  // 控制点 前相关
+    bool post_Relation = false; // 控制点 后相关
 };
 
 #endif // ANCHORPOINTINFO_H
