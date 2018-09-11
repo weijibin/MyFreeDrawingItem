@@ -41,6 +41,7 @@ void AnchorPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     if(m_info.state == 1)
     {
+        m_DrawingItem->editingTheAnchorItem(this);
         event->accept();
     }
 }
@@ -108,10 +109,35 @@ void AnchorPointItem::setCtrlVisible(bool visible)
 {
     m_isCtrlVisible = visible;
 
-    m_preCtrlPtnItem.setVisible(visible);
-    m_preLineItem.setVisible(visible);
-    m_postCtrlPtnItem.setVisible(visible);
-    m_postLineItem.setVisible(visible);
+    {
+        m_preCtrlPtnItem.setVisible(visible);
+        m_preLineItem.setVisible(visible);
+        m_postCtrlPtnItem.setVisible(visible);
+        m_postLineItem.setVisible(visible);
+
+        if(m_info.pre_CtrlPoint == QPointF(-10000,-10000))
+        {
+            m_preCtrlPtnItem.setVisible(false);
+            m_preLineItem.setVisible(false);
+        }
+
+        if(m_info.post_CtrlPoint == QPointF(-10000,-10000) )
+        {
+            m_postCtrlPtnItem.setVisible(false);
+            m_postLineItem.setVisible(false);
+        }
+    }
+
+    QPointF pos = m_info.anchorPoint;
+    QPointF prePos = m_info.pre_CtrlPoint;
+    QPointF postPos = m_info.post_CtrlPoint;
+
+    m_preCtrlPtnItem.setPos(prePos);
+    m_postCtrlPtnItem.setPos(postPos);
+
+    m_preLineItem.setLineInfo(pos,prePos);
+    m_postLineItem.setLineInfo(pos,postPos);
+
 }
 
 void AnchorPointItem::setState(int state)
@@ -174,38 +200,27 @@ void AnchorPointItem::updatePropertyByInfo()
     m_preLineItem.setLineInfo(pos,prePos);
     m_postLineItem.setLineInfo(pos,postPos);
 
+
     if(m_info.pre_CtrlPoint == QPointF(-10000,-10000) || m_isCtrlVisible==false)
     {
         m_preCtrlPtnItem.setVisible(false);
         m_preLineItem.setVisible(false);
-
-//        m_preCtrlPtnItem.setPos(pos);
-//        m_preLineItem.setLineInfo(pos,pos);
     }
     else
     {
         m_preCtrlPtnItem.setVisible(true);
         m_preLineItem.setVisible(true);
-
-//        m_preCtrlPtnItem.setPos(prePos);
-//        m_preLineItem.setLineInfo(pos,prePos);
     }
 
     if(m_info.post_CtrlPoint == QPointF(-10000,-10000) || m_isCtrlVisible==false)
     {
         m_postCtrlPtnItem.setVisible(false);
         m_postLineItem.setVisible(false);
-
-//        m_postCtrlPtnItem.setPos(pos);
-//        m_postLineItem.setLineInfo(pos,pos);
     }
     else
     {
         m_postCtrlPtnItem.setVisible(true);
         m_postLineItem.setVisible(true);
-
-//        m_postCtrlPtnItem.setPos(postPos);
-//        m_postLineItem.setLineInfo(pos,postPos);
     }
 
     if(m_DrawingItem && m_info.state == 1)

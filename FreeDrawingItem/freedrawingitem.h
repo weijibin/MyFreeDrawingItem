@@ -51,6 +51,9 @@ public:
     // restore
     void fromJSONObj(QJsonObject& jsonObj );
 
+    // anchor controlPoint show hide setting
+    void editingTheAnchorItem(AnchorPointItem * item);
+
 protected:
     // editing
     void downWhenEditing(QPointF point);

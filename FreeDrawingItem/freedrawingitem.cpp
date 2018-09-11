@@ -226,16 +226,17 @@ void FreeDrawingItem::endCreate()
     synchronizeAnchorInfo(); // 创建完成后同步 锚点信息
 
     // hide control points
-//    foreach (AnchorPointItem *item, m_AnchorPointItems)
-//    {
-//        item->setCtrlVisible(false);
-//    }
-
-    // 创建完成后 是编辑状态
     foreach (AnchorPointItem *item, m_AnchorPointItems)
     {
+        item->setCtrlVisible(false);
         item->setState(1);
     }
+
+    // 创建完成后 是编辑状态
+//    foreach (AnchorPointItem *item, m_AnchorPointItems)
+//    {
+//        item->setState(1);
+//    }
 }
 
 void FreeDrawingItem::synchronizeAnchorInfo()
@@ -405,4 +406,16 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item)
         }
     }
     updateBoundingRect();
+}
+
+void FreeDrawingItem::editingTheAnchorItem(AnchorPointItem *cur)
+{
+//    int index = m_AnchorPointItems.indexOf(cur);
+//    int count = m_AnchorPointItems.count();
+
+    foreach (AnchorPointItem *item, m_AnchorPointItems)
+    {
+        item->setCtrlVisible(false);
+    }
+    cur->setCtrlVisible(true);
 }
