@@ -459,3 +459,17 @@ void FreeDrawingItem::editingTheAnchorItem(AnchorPointItem *cur)
     }
     cur->setCtrlVisible(true);
 }
+
+QVector<AnchorPointInfo> FreeDrawingItem::getAnchorInfos()
+{
+    QVector<AnchorPointInfo> infos;
+    foreach (AnchorPointItem *item, m_AnchorPointItems) {
+       infos.append(item->getPointInfo());
+    }
+    return infos;
+}
+
+void FreeDrawingItem::setAnchorInfos(QVector<AnchorPointInfo> infos)
+{
+
+}

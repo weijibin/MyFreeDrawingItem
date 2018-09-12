@@ -37,6 +37,9 @@ public:
 
     void changePathByItem(AnchorPointItem* item,QString type = "");
 
+    // anchor controlPoint show hide setting
+    void editingTheAnchorItem(AnchorPointItem * item);
+
     // translate item  or  call in command
     void translateItem(QPointF offset);
 
@@ -51,8 +54,9 @@ public:
     // restore
     void fromJSONObj(QJsonObject& jsonObj );
 
-    // anchor controlPoint show hide setting
-    void editingTheAnchorItem(AnchorPointItem * item);
+    // get and set infos
+    void setAnchorInfos(QVector<AnchorPointInfo> infos);
+    QVector<AnchorPointInfo> getAnchorInfos();
 
 protected:
     // editing
@@ -61,22 +65,15 @@ protected:
     void upWhenEditing(QPointF point);
 
     void updateBoundingRect();
-
     void synchronizeAnchorInfo();
-
     QPainterPath generatePathByInfo(const AnchorPointInfo & first, const AnchorPointInfo & second);
 
 private:
 
     QRectF m_boundingRect;
 
-//    QPainterPath m_path;
-
+    //sub paths;
     QVector<QPainterPath> m_subPaths;
-    // sub paths
-//    QVector<QGraphicsPathItem> m_subPathItems;
-
-//    QVector<AnchorPointInfo> m_AnchorPoints;
 
     // anchor info
     QVector<AnchorPointItem *> m_AnchorPointItems;
