@@ -12,6 +12,7 @@ class FreeDrawingItem;
 
 class AnchorPointItem : public CustomItem
 {
+    friend class ControlPointItem;
 public:
     AnchorPointItem(QGraphicsItem *parent = nullptr);
 
@@ -40,6 +41,11 @@ public:
     void updateInfoByPos(const QString &type);
 
 protected:
+    // record Editing state
+    void startEditingAnchor();
+    void endEditingAnchor();
+
+protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
@@ -59,6 +65,8 @@ private:
     ControlPointItem &m_postCtrlPtnItem;
 
     FreeDrawingItem * m_DrawingItem = nullptr;
+
+    QPointF m_downPoint;
 };
 
 #endif // ANCHORPOINTITEM_H

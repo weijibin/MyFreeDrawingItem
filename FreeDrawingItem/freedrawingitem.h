@@ -8,6 +8,7 @@
 
 class FreeDrawingItem: public QGraphicsItem
 {
+    friend class AnchorPointItem;
 public:
     FreeDrawingItem(QGraphicsItem *parent=nullptr);
     FreeDrawingItem(const FreeDrawingItem &item);
@@ -33,12 +34,7 @@ public:
     void moveWhenCreating(QPointF point);
     void upWhenCreating(QPointF point);
     // end creating
-    void endCreate();
-
-    void changePathByItem(AnchorPointItem* item,QString type = "");
-
-    // anchor controlPoint show hide setting
-    void editingTheAnchorItem(AnchorPointItem * item);
+    void endCreate();  
 
     // translate item  or  call in command
     void translateItem(QPointF offset);
@@ -59,6 +55,15 @@ public:
     QVector<AnchorPointInfo> getAnchorInfos();
 
 protected:
+    // change subpath
+    void changePathByItem(AnchorPointItem* item,QString type = "");
+    // anchor controlPoint show hide setting
+    void editingTheAnchorItem(AnchorPointItem * item);
+
+    // record Editing state
+    void startEditing();
+    void endEditing();
+
     // editing
     void downWhenEditing(QPointF point);
     void moveWhenEditing(QPointF point);
@@ -80,6 +85,9 @@ private:
 
     bool m_isPressed = false;
     QPointF m_downPoint;
+
+    // infos
+    QVector<AnchorPointInfo> m_startInfos;
 };
 
 #endif // FREEDRAWINGITEM_H

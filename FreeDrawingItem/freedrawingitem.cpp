@@ -3,6 +3,7 @@
 #include <QPainterPath>
 #include <QGraphicsScene>
 #include <QDebug>
+#include "Command/hhcommandfreedrawingitemchange.h"
 
 FreeDrawingItem::FreeDrawingItem(QGraphicsItem *parent):QGraphicsItem(parent)
 {
@@ -472,4 +473,17 @@ QVector<AnchorPointInfo> FreeDrawingItem::getAnchorInfos()
 void FreeDrawingItem::setAnchorInfos(QVector<AnchorPointInfo> infos)
 {
 
+}
+
+void FreeDrawingItem::startEditing()
+{
+    qDebug()<<"startEditing";
+    m_startInfos.clear();
+    m_startInfos = getAnchorInfos();
+}
+
+void FreeDrawingItem::endEditing()
+{
+    qDebug()<<"endEditing";
+    auto *cmd = new HHCommandFreeDrawingItemChange(this,m_startInfos);
 }

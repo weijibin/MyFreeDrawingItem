@@ -41,6 +41,9 @@ void AnchorPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     if(m_info.state == 1)
     {
+        m_downPoint = event->scenePos();
+        m_DrawingItem->startEditing();
+
         m_DrawingItem->editingTheAnchorItem(this);
         event->accept();
     }
@@ -52,6 +55,11 @@ void AnchorPointItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if(m_info.state == 1)
     {
         QPointF nPtn = event->scenePos();
+        //==========================
+        qreal dis = QPointF(m_downPoint - nPtn).manhattanLength();
+        if(dis < 5)
+            return;
+        //========================
 
         QPointF offset = nPtn - m_info.anchorPoint;
 
@@ -73,6 +81,20 @@ void AnchorPointItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void AnchorPointItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
+
+    if(m_info.state == 1)
+    {
+        QPointF nPtn = event->scenePos();
+        //==========================
+        qreal dis = QPointF(m_downPoint - nPtn).manhattanLength();
+        if(dis < 5)
+            return;
+        else
+        {
+            m_DrawingItem->endEditing();
+        }
+        //========================
+    }
 }
 
 void AnchorPointItem::deleteCtrl()
@@ -207,4 +229,14 @@ void AnchorPointItem::updatePropertyByInfo()
         m_DrawingItem->changePathByItem(this);
     }
 
+}
+
+void AnchorPointItem::startEditingAnchor()
+{
+    m_DrawingItem->startEditing();
+}
+
+void AnchorPointItem::endEditingAnchor()
+{
+    m_DrawingItem->endEditing();
 }

@@ -24,6 +24,8 @@ private:
     qreal m_radius;
     AnchorPointItem * m_pointItem=nullptr;
     QString m_type;
+
+    QPointF m_downPoint;
 };
 
 #endif // CONTROLPOINTITEM_H

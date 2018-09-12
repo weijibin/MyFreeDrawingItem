@@ -30,6 +30,11 @@ void ControlPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         if(m_pointItem->getPointInfo().state == 1)
         {
+            //===========================
+            m_downPoint = event->scenePos();
+            m_pointItem->startEditingAnchor();
+            //===========================
+
             event->accept();
         }
     }
@@ -46,6 +51,12 @@ void ControlPointItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         if(info.state ==1)
         {
             QPointF nPtn = event->scenePos();
+            //==========================
+            qreal dis = QPointF(m_downPoint - nPtn).manhattanLength();
+            if(dis < 5)
+                return;
+            //========================
+
             setPos(nPtn);
             m_pointItem->updateInfoByPos(m_type);
         }
@@ -55,4 +66,20 @@ void ControlPointItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void ControlPointItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
+    if(m_pointItem)
+    {
+        if(m_pointItem->getPointInfo().state == 1)
+        {
+            QPointF nPtn = event->scenePos();
+            //==========================
+            qreal dis = QPointF(m_downPoint - nPtn).manhattanLength();
+            if(dis < 5)
+                return;
+            else
+            {
+                m_pointItem->endEditingAnchor();
+            }
+            //========================
+        }
+    }
 }

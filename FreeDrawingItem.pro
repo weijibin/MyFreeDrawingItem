@@ -32,7 +32,7 @@ SOURCES += \
     FreeDrawingItem/anchorpointitem.cpp \
     FreeDrawingItem/controlpointitem.cpp \
     FreeDrawingItem/controllineitem.cpp \
-    Command/hhcommandfreedrawingitemchange.cpp
+    FreeDrawingItem/Command/hhcommandfreedrawingitemchange.cpp
 
 HEADERS += \
         widget.h \
@@ -43,7 +43,7 @@ HEADERS += \
     FreeDrawingItem/controlpointitem.h \
     FreeDrawingItem/controllineitem.h \
     FreeDrawingItem/anchorpointinfo.h \
-    Command/hhcommandfreedrawingitemchange.h
+    FreeDrawingItem/Command/hhcommandfreedrawingitemchange.h
 
 FORMS += \
         widget.ui
