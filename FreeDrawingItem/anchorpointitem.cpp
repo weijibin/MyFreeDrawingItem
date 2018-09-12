@@ -4,6 +4,7 @@
 #include <QPen>
 #include <QCursor>
 #include <QPointF>
+#include <QGraphicsScene>
 
 AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     : m_preCtrlPtnItem(*(new ControlPointItem)),m_postCtrlPtnItem(*(new ControlPointItem))
@@ -12,10 +13,14 @@ AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     m_radius = 4;
     this->setBoundingBox(QRectF(-1*m_radius,-1*m_radius,2*m_radius,2*m_radius));
 
+//    this->setParentItem(parent);
+
     m_postLineItem.setParentItem(parent);
     m_preLineItem.setParentItem(parent);
     m_preCtrlPtnItem.setParentItem(parent);
     m_postCtrlPtnItem.setParentItem(parent);
+
+    this->setParentItem(parent);
 
     m_preCtrlPtnItem.setPointItem(this);
     m_preCtrlPtnItem.setPosType("preCtrl");
@@ -23,7 +28,7 @@ AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     m_postCtrlPtnItem.setPointItem(this);
     m_postCtrlPtnItem.setPosType("postCtrl");
 
-    this->setParentItem(parent);
+
 
     setCursor(QCursor(Qt::OpenHandCursor));
 
@@ -32,7 +37,10 @@ AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
 
 AnchorPointItem::~AnchorPointItem()
 {
-
+//    delete &m_preCtrlPtnItem;
+//    delete &m_preLineItem;
+//    delete &m_postCtrlPtnItem;
+//    delete &m_postLineItem;
 }
 
 void AnchorPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)

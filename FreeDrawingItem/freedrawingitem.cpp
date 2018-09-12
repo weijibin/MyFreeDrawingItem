@@ -253,8 +253,8 @@ void FreeDrawingItem::endCreate()
     {
 //        qDebug()<<m_AnchorPointItems.count();
         AnchorPointItem * ptr = m_AnchorPointItems.takeLast();
-        ptr->setParentItem(nullptr);
-        ptr->deleteCtrl();
+//        ptr->setParentItem(nullptr);
+//        ptr->deleteCtrl();
         delete ptr;
 
         m_AnchorPointItems.last()->setCtrlVisible(false); //隐藏最后Anchor的控制点
@@ -275,7 +275,6 @@ void FreeDrawingItem::endCreate()
 //    {
 //        item->setState(1);
 //    }
-
 }
 
 void FreeDrawingItem::synchronizeAnchorInfo()
@@ -472,7 +471,23 @@ QVector<AnchorPointInfo> FreeDrawingItem::getAnchorInfos()
 
 void FreeDrawingItem::setAnchorInfos(QVector<AnchorPointInfo> infos)
 {
+    // delete all subpath
+    m_subPaths.clear();
+    // delete all anchor point item
+    if(!m_AnchorPointItems.isEmpty())
+    {
+//        AnchorPointItem * ptr = m_AnchorPointItems.takeLast();
+//        ptr->setParentItem(nullptr);
+//        ptr->deleteCtrl();
+//        delete ptr;
 
+        qDeleteAll(m_AnchorPointItems);
+    }
+
+    // create anchorpointitem by infos
+    {
+
+    }
 }
 
 void FreeDrawingItem::startEditing()
