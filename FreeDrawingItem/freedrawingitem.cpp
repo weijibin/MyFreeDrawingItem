@@ -392,7 +392,7 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item, QString type)
          // update relational anchor point
         if(curInfo.pre_Relation)
         {
-            if(type == "preCtrl")
+            if(type != "postCtrl")
                 preInfo.isSymmetrical = false;
 
             preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
@@ -400,7 +400,7 @@ void FreeDrawingItem::changePathByItem(AnchorPointItem *item, QString type)
         }
         if(curInfo.post_Relation)
         {
-            if(type == "postCtrl")
+            if(type != "preCtrl")
                 postInfo.isSymmetrical = false;
 
             postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
