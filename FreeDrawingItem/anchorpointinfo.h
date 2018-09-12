@@ -17,7 +17,7 @@ public:
     bool pre_Relation = false;  // 控制点 前相关
     bool post_Relation = false; // 控制点 后相关
 
-    bool isSymmetrical = false;
+    bool isSymmetrical = false; //对称性
 };
 
 #endif // ANCHORPOINTINFO_H

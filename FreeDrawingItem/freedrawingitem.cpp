@@ -72,7 +72,14 @@ void FreeDrawingItem::startCreate(QPointF point)
     QPointF pos = point;
 
     AnchorPointItem * item = new AnchorPointItem(this);
-    item->setAnchorPos(pos);
+//    item->setAnchorPos(pos);
+
+    {
+        AnchorPointInfo info = item->getPointInfo();
+        info.anchorPoint = pos;
+        item->setPointInfo(info);
+    }
+
     item->setFreeDrawingItem(this);
 
     item->setCtrlVisible(false);   // 隐藏控制点
@@ -87,7 +94,14 @@ void FreeDrawingItem::startCreate(QPointF point)
 
     // next anchor
     AnchorPointItem * itemLast = new AnchorPointItem(this);
-    itemLast->setAnchorPos(pos);
+//    itemLast->setAnchorPos(pos);
+
+    {
+        AnchorPointInfo infoN = itemLast->getPointInfo();
+        infoN.anchorPoint = pos;
+        itemLast->setPointInfo(infoN);
+    }
+
     itemLast->setFreeDrawingItem(this);
 
     m_AnchorPointItems.append(itemLast);
@@ -104,7 +118,14 @@ void FreeDrawingItem::downWhenCreating(QPointF point)
 
     QPointF pos = point;
 
-    m_AnchorPointItems.last()->setAnchorPos(point);
+//    m_AnchorPointItems.last()->setAnchorPos(point);
+
+    {
+        AnchorPointItem * itemLast = m_AnchorPointItems.last();
+        AnchorPointInfo infoL = itemLast->getPointInfo();
+        infoL.anchorPoint = pos;
+        itemLast->setPointInfo(infoL);
+    }
 
     // generate subPath
     {
@@ -115,11 +136,19 @@ void FreeDrawingItem::downWhenCreating(QPointF point)
         m_subPaths.append(path);
     }
     // next anchor
-    AnchorPointItem * itemLast = new AnchorPointItem(this);
-    itemLast->setAnchorPos(pos);
-    itemLast->setFreeDrawingItem(this);
+    AnchorPointItem * itemNew = new AnchorPointItem(this);
 
-    m_AnchorPointItems.append(itemLast);
+//    itemNew->setAnchorPos(pos);
+
+    {
+        AnchorPointInfo info = itemNew->getPointInfo();
+        info.anchorPoint = pos;
+        itemNew->setPointInfo(info);
+    }
+
+    itemNew->setFreeDrawingItem(this);
+
+    m_AnchorPointItems.append(itemNew);
 
     updateBoundingRect();
 }
@@ -190,7 +219,15 @@ void FreeDrawingItem::moveWhenCreating(QPointF point)
                 path.quadTo(preInfo.post_CtrlPoint,point);
                 m_subPaths.last() = path;
             }
-            m_AnchorPointItems.last()->setAnchorPos(point);
+
+//            m_AnchorPointItems.last()->setAnchorPos(point);
+
+            {
+                AnchorPointItem * itemLast = m_AnchorPointItems.last();
+                AnchorPointInfo infoL = itemLast->getPointInfo();
+                infoL.anchorPoint = point;
+                itemLast->setPointInfo(infoL);
+            }
         }
     }
 
@@ -237,6 +274,7 @@ void FreeDrawingItem::endCreate()
 //    {
 //        item->setState(1);
 //    }
+
 }
 
 void FreeDrawingItem::synchronizeAnchorInfo()

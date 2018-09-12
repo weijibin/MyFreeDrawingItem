@@ -92,11 +92,11 @@ void AnchorPointItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->restore();
 }
 
-void AnchorPointItem::setAnchorPos(QPointF pos)
-{
-    m_info.anchorPoint = pos;
-    updatePropertyByInfo();
-}
+//void AnchorPointItem::setAnchorPos(QPointF pos)
+//{
+//    m_info.anchorPoint = pos;
+//    updatePropertyByInfo();
+//}
 
 void AnchorPointItem::setPointInfo( const AnchorPointInfo &info , bool needUpdate)
 {
@@ -200,28 +200,7 @@ void AnchorPointItem::updatePropertyByInfo()
     m_preLineItem.setLineInfo(pos,prePos);
     m_postLineItem.setLineInfo(pos,postPos);
 
-
-    if(m_info.pre_CtrlPoint == QPointF(-10000,-10000) || m_isCtrlVisible==false)
-    {
-        m_preCtrlPtnItem.setVisible(false);
-        m_preLineItem.setVisible(false);
-    }
-    else
-    {
-        m_preCtrlPtnItem.setVisible(true);
-        m_preLineItem.setVisible(true);
-    }
-
-    if(m_info.post_CtrlPoint == QPointF(-10000,-10000) || m_isCtrlVisible==false)
-    {
-        m_postCtrlPtnItem.setVisible(false);
-        m_postLineItem.setVisible(false);
-    }
-    else
-    {
-        m_postCtrlPtnItem.setVisible(true);
-        m_postLineItem.setVisible(true);
-    }
+    setCtrlVisible(m_isCtrlVisible);  // update ptn line visibility
 
     if(m_DrawingItem && m_info.state == 1)
     {

@@ -25,14 +25,15 @@ public:
 
     void setPointInfo(const AnchorPointInfo &info,bool needUpdate = true);
 
-    void setAnchorPos(QPointF pos);
+    void setFreeDrawingItem(FreeDrawingItem * item);
+
+//    void setAnchorPos(QPointF pos);
 
     void setCtrlVisible(bool visible);
 
     void setState(int state);
 
-    void setFreeDrawingItem(FreeDrawingItem * item);
-
+    // update the point and  line property by info
     void updatePropertyByInfo();
 
     // update info by controlpoint pos
