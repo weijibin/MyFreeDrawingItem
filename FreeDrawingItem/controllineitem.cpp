@@ -7,11 +7,16 @@ ControlLineItem::ControlLineItem(QGraphicsItem *parent) : CustomItem(parent)
     m_pen.setColor(Qt::gray);
     m_pen.setStyle(Qt::DotLine);
     m_pen.setWidth(2);
+
+    static int id = 1;
+    m_ID = id;
+    id++;
 }
 
 ControlLineItem::~ControlLineItem()
 {
     qDebug()<<"delete ControlLineItem";
+    qDebug()<<m_ID;
 }
 
 void ControlLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

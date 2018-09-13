@@ -67,6 +67,8 @@ private:
     FreeDrawingItem * m_DrawingItem = nullptr;
 
     QPointF m_downPoint;
+
+    int m_ID = 0;
 };
 
 #endif // ANCHORPOINTITEM_H

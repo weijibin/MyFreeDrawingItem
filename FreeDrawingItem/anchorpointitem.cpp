@@ -5,6 +5,7 @@
 #include <QCursor>
 #include <QPointF>
 #include <QGraphicsScene>
+#include <QDebug>
 
 AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     : m_preCtrlPtnItem(*(new ControlPointItem)),m_postCtrlPtnItem(*(new ControlPointItem))
@@ -33,14 +34,25 @@ AnchorPointItem::AnchorPointItem(QGraphicsItem *parent)
     setCursor(QCursor(Qt::OpenHandCursor));
 
     setAcceptHoverEvents(true);
+
+    {
+        static  int id_s = 1;
+        m_ID = id_s;
+        id_s++;
+    }
 }
 
 AnchorPointItem::~AnchorPointItem()
 {
-//    delete &m_preCtrlPtnItem;
-//    delete &m_preLineItem;
+    qDebug()<<"~AnchorPointItem()";
+    qDebug()<<m_ID;
+
 //    delete &m_postCtrlPtnItem;
+//    delete &m_preCtrlPtnItem;
+
+//    delete &m_preLineItem;
 //    delete &m_postLineItem;
+
 }
 
 void AnchorPointItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
