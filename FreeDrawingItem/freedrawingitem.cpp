@@ -476,17 +476,38 @@ void FreeDrawingItem::setAnchorInfos(QVector<AnchorPointInfo> infos)
     // delete all anchor point item
     if(!m_AnchorPointItems.isEmpty())
     {
-//        AnchorPointItem * ptr = m_AnchorPointItems.takeLast();
-//        ptr->setParentItem(nullptr);
-//        ptr->deleteCtrl();
-//        delete ptr;
-
-        qDeleteAll(m_AnchorPointItems);
+        //method 1
+        while(!m_AnchorPointItems.isEmpty())
+        {
+            AnchorPointItem * ptr = m_AnchorPointItems.takeLast();
+            ptr->deleteCtrl();
+            delete ptr;
+        }
+        // method 2
+//        qDeleteAll(m_AnchorPointItems);
     }
 
     // create anchorpointitem by infos
     {
 
+        //create subpath
+        for(int i = 0; i<infos.count()-2; i++)
+        {
+            AnchorPointInfo curInfo = infos.at(i);
+            AnchorPointInfo postInfo = infos.at(i+1);
+            QPainterPath path = generatePathByInfo(curInfo,postInfo);
+            m_subPaths.append(path);
+        }
+
+        foreach (AnchorPointInfo info, infos)
+        {
+            // create anchor
+            AnchorPointItem * itemNew = new AnchorPointItem(this);
+            itemNew->setPointInfo(info);
+            itemNew->setFreeDrawingItem(this);
+            m_AnchorPointItems.append(itemNew);
+        }
+        updateBoundingRect();
     }
 }
 
