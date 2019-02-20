@@ -1,11 +1,31 @@
 #include "mygraphicsview.h"
 #include <QGraphicsScene>
 #include <QCursor>
+#include <QDebug>
 
 MyGraphicsView::MyGraphicsView(QWidget * parent) : QGraphicsView(parent)
 {
     this->setMouseTracking(true);
     setCursor(QCursor(Qt::ArrowCursor));
+}
+
+bool MyGraphicsView::event(QEvent* ev)
+{
+//    if (ev->type() == QEvent::PolishRequest) {
+//        // overwrite handling of PolishRequest if any
+//        doThings();
+//        return true;
+//    } else  if (ev->type() == QEvent::Show) {
+
+//        QWidget::event(ev);
+//        return true;
+//    }
+    qDebug()<<"======MyGraphicsView::event======";
+    qDebug()<<ev->type();
+    qDebug()<<"=============================";
+
+    // Make sure the rest of events are handled
+    return QWidget::event(ev);
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent *event)
