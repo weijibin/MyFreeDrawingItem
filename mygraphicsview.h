@@ -9,6 +9,8 @@ class MyGraphicsView : public QGraphicsView
 {
 public:
     MyGraphicsView(QWidget *parent = nullptr);
+
+    virtual bool event(QEvent *event) override;
 protected:
     virtual void mousePressEvent(QMouseEvent * event)  override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;

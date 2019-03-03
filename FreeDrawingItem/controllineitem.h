@@ -20,6 +20,8 @@ private:
     QPainterPath m_path;
 
     QPen m_pen;
+
+    int m_ID;
 };
 
 #endif // CONTROLLINEITEM_H

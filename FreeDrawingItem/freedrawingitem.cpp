@@ -3,6 +3,7 @@
 #include <QPainterPath>
 #include <QGraphicsScene>
 #include <QDebug>
+#include "Command/hhcommandfreedrawingitemchange.h"
 
 FreeDrawingItem::FreeDrawingItem(QGraphicsItem *parent):QGraphicsItem(parent)
 {
@@ -17,23 +18,32 @@ FreeDrawingItem::FreeDrawingItem(const FreeDrawingItem &item)
 
 QRectF FreeDrawingItem::boundingRect() const
 {
-    QRectF rect = childrenBoundingRect();
-    return rect;
+//    QRectF rect = childrenBoundingRect();
+//    return rect;
+//    qDebug()<<childrenBoundingRect();
+    return m_boundingRect;
 }
 
 void FreeDrawingItem::updateBoundingRect()
 {
     prepareGeometryChange();
-    m_boundingRect = childrenBoundingRect();
-//    this->scene()->update();
+
+    m_boundingRect = m_subPaths.first().controlPointRect();
+
+    foreach (QPainterPath path, m_subPaths)
+    {
+        m_boundingRect = m_boundingRect.united(path.controlPointRect());
+    }
+
+//    m_boundingRect = childrenBoundingRect();
 }
 
 void FreeDrawingItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
-//    painter->setPen(Qt::red);
-//    painter->drawRect(boundingRect());
+    painter->setPen(Qt::red);
+    painter->drawRect(boundingRect());
     painter->setPen(Qt::darkGreen);
     foreach (QPainterPath path, m_subPaths)
     {
@@ -63,7 +73,15 @@ void FreeDrawingItem::startCreate(QPointF point)
     QPointF pos = point;
 
     AnchorPointItem * item = new AnchorPointItem(this);
-    item->setAnchorPos(pos);
+//    item->setAnchorPos(pos);
+
+    {
+        AnchorPointInfo info = item->getPointInfo();
+        info.anchorPoint = pos;
+        item->setPointInfo(info);
+    }
+
+    item->setFreeDrawingItem(this);
 
     item->setCtrlVisible(false);   // 隐藏控制点
 
@@ -77,7 +95,16 @@ void FreeDrawingItem::startCreate(QPointF point)
 
     // next anchor
     AnchorPointItem * itemLast = new AnchorPointItem(this);
-    itemLast->setAnchorPos(pos);
+//    itemLast->setAnchorPos(pos);
+
+    {
+        AnchorPointInfo infoN = itemLast->getPointInfo();
+        infoN.anchorPoint = pos;
+        itemLast->setPointInfo(infoN);
+    }
+
+    itemLast->setFreeDrawingItem(this);
+
     m_AnchorPointItems.append(itemLast);
 
     updateBoundingRect();
@@ -92,7 +119,14 @@ void FreeDrawingItem::downWhenCreating(QPointF point)
 
     QPointF pos = point;
 
-    m_AnchorPointItems.last()->setAnchorPos(point);
+//    m_AnchorPointItems.last()->setAnchorPos(point);
+
+    {
+        AnchorPointItem * itemLast = m_AnchorPointItems.last();
+        AnchorPointInfo infoL = itemLast->getPointInfo();
+        infoL.anchorPoint = pos;
+        itemLast->setPointInfo(infoL);
+    }
 
     // generate subPath
     {
@@ -103,9 +137,19 @@ void FreeDrawingItem::downWhenCreating(QPointF point)
         m_subPaths.append(path);
     }
     // next anchor
-    AnchorPointItem * itemLast = new AnchorPointItem(this);
-    itemLast->setAnchorPos(pos);
-    m_AnchorPointItems.append(itemLast);
+    AnchorPointItem * itemNew = new AnchorPointItem(this);
+
+//    itemNew->setAnchorPos(pos);
+
+    {
+        AnchorPointInfo info = itemNew->getPointInfo();
+        info.anchorPoint = pos;
+        itemNew->setPointInfo(info);
+    }
+
+    itemNew->setFreeDrawingItem(this);
+
+    m_AnchorPointItems.append(itemNew);
 
     updateBoundingRect();
 }
@@ -129,6 +173,10 @@ void FreeDrawingItem::moveWhenCreating(QPointF point)
 
             QPointF  offset = m_downPoint - point;
             info.pre_CtrlPoint = m_downPoint + offset;
+
+            {
+                info.isSymmetrical = true;
+            }
 
             m_AnchorPointItems.at(size-2)->setPointInfo(info);
 
@@ -172,7 +220,15 @@ void FreeDrawingItem::moveWhenCreating(QPointF point)
                 path.quadTo(preInfo.post_CtrlPoint,point);
                 m_subPaths.last() = path;
             }
-            m_AnchorPointItems.last()->setAnchorPos(point);
+
+//            m_AnchorPointItems.last()->setAnchorPos(point);
+
+            {
+                AnchorPointItem * itemLast = m_AnchorPointItems.last();
+                AnchorPointInfo infoL = itemLast->getPointInfo();
+                infoL.anchorPoint = point;
+                itemLast->setPointInfo(infoL);
+            }
         }
     }
 
@@ -197,8 +253,8 @@ void FreeDrawingItem::endCreate()
     {
 //        qDebug()<<m_AnchorPointItems.count();
         AnchorPointItem * ptr = m_AnchorPointItems.takeLast();
-        ptr->setParentItem(nullptr);
-        ptr->deleteCtrl();
+//        ptr->setParentItem(nullptr);
+//        ptr->deleteCtrl();
         delete ptr;
 
         m_AnchorPointItems.last()->setCtrlVisible(false); //隐藏最后Anchor的控制点
@@ -208,9 +264,16 @@ void FreeDrawingItem::endCreate()
     synchronizeAnchorInfo(); // 创建完成后同步 锚点信息
 
     // hide control points
+    foreach (AnchorPointItem *item, m_AnchorPointItems)
+    {
+        item->setCtrlVisible(false);
+        item->setState(1);
+    }
+
+    // 创建完成后 是编辑状态
 //    foreach (AnchorPointItem *item, m_AnchorPointItems)
 //    {
-//        item->setCtrlVisible(false);
+//        item->setState(1);
 //    }
 }
 
@@ -223,14 +286,22 @@ void FreeDrawingItem::synchronizeAnchorInfo()
         curInfo = m_AnchorPointItems.at(i)->getPointInfo();
         nextInfo = m_AnchorPointItems.at(i+1)->getPointInfo();
 
-        if(curInfo.post_CtrlPoint == QPointF(-10000,-10000))
+        if(curInfo.post_CtrlPoint == QPointF(-10000,-10000) && nextInfo.pre_CtrlPoint != QPointF(-10000,-10000))
         {
             curInfo.post_CtrlPoint = nextInfo.pre_CtrlPoint;
+            {
+                curInfo.post_Relation = true;
+                nextInfo.pre_Relation = true;
+            }
         }
 
-        if(nextInfo.pre_CtrlPoint == QPointF(-10000,-10000))
+        if(nextInfo.pre_CtrlPoint == QPointF(-10000,-10000) && curInfo.post_CtrlPoint != QPointF(-10000,-10000))
         {
             nextInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
+            {
+                curInfo.post_Relation = true;
+                nextInfo.pre_Relation = true;
+            }
         }
 
         m_AnchorPointItems.at(i)->setPointInfo(curInfo);
@@ -278,4 +349,177 @@ void FreeDrawingItem::getJSONObj( QJsonObject& jsonObj )
 void FreeDrawingItem::fromJSONObj(QJsonObject& jsonObj )
 {
 
+}
+
+QPainterPath FreeDrawingItem::generatePathByInfo(const AnchorPointInfo &first, const AnchorPointInfo &second)
+{
+    QPainterPath path;
+    path.moveTo(first.anchorPoint);
+
+    if( first.post_Relation==false && first.post_CtrlPoint == QPointF(-10000,-10000))
+    {
+        path.lineTo(second.anchorPoint);
+    }
+    else
+    {
+        if(first.post_Relation)
+        {
+            path.quadTo(first.post_CtrlPoint, second.anchorPoint);
+        }
+        else
+        {
+             path.cubicTo(first.post_CtrlPoint,second.pre_CtrlPoint,second.anchorPoint);
+        }
+    }
+
+    return path;
+}
+
+void FreeDrawingItem::changePathByItem(AnchorPointItem *item, QString type)
+{
+    int index = m_AnchorPointItems.indexOf(item);
+    int count = m_AnchorPointItems.count();
+
+    qDebug()<< "FreeDrawingItem::changePathByItem";
+    qDebug()<< index << count;
+
+    if(index == 0)  // begin
+    {
+         AnchorPointInfo curInfo = m_AnchorPointItems.at(index)->getPointInfo();
+         AnchorPointInfo postInfo = m_AnchorPointItems.at(index+1)->getPointInfo();
+
+         QPainterPath path = generatePathByInfo(curInfo,postInfo);
+         m_subPaths[index] = path;
+
+         if(curInfo.post_Relation)  // update relational anchor point
+         {
+             postInfo.isSymmetrical = false;  //设置对称性，对称性被破坏
+
+             postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
+             m_AnchorPointItems.at(index+1)->setPointInfo(postInfo,false);
+         }
+    }
+    else if(index == count -1)  // end
+    {
+        AnchorPointInfo preInfo = m_AnchorPointItems.at(index-1)->getPointInfo();
+        AnchorPointInfo curInfo = m_AnchorPointItems.at(index)->getPointInfo();
+
+        QPainterPath path = generatePathByInfo(preInfo,curInfo);
+        m_subPaths[index-1] = path;
+
+        if(curInfo.pre_Relation)  // update relational anchor point
+        {
+            preInfo.isSymmetrical = false;
+
+            preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
+            m_AnchorPointItems.at(index-1)->setPointInfo(preInfo,false);
+        }
+    }
+    else // middle
+    {
+        AnchorPointInfo preInfo = m_AnchorPointItems.at(index-1)->getPointInfo();
+        AnchorPointInfo curInfo = m_AnchorPointItems.at(index)->getPointInfo();
+        AnchorPointInfo postInfo = m_AnchorPointItems.at(index+1)->getPointInfo();
+
+        QPainterPath path1 = generatePathByInfo(preInfo,curInfo);
+        m_subPaths[index-1] = path1;
+
+        QPainterPath path2 = generatePathByInfo(curInfo,postInfo);
+        m_subPaths[index] = path2;
+
+         // update relational anchor point
+        if(curInfo.pre_Relation)
+        {
+            if(type != "postCtrl")
+                preInfo.isSymmetrical = false;
+
+            preInfo.post_CtrlPoint = curInfo.pre_CtrlPoint;
+            m_AnchorPointItems.at(index-1)->setPointInfo(preInfo,false);
+        }
+        if(curInfo.post_Relation)
+        {
+            if(type != "preCtrl")
+                postInfo.isSymmetrical = false;
+
+            postInfo.pre_CtrlPoint = curInfo.post_CtrlPoint;
+            m_AnchorPointItems.at(index+1)->setPointInfo(postInfo,false);
+        }
+    }
+    updateBoundingRect();
+}
+
+void FreeDrawingItem::editingTheAnchorItem(AnchorPointItem *cur)
+{
+//    int index = m_AnchorPointItems.indexOf(cur);
+//    int count = m_AnchorPointItems.count();
+
+    foreach (AnchorPointItem *item, m_AnchorPointItems)
+    {
+        item->setCtrlVisible(false);
+    }
+    cur->setCtrlVisible(true);
+}
+
+QVector<AnchorPointInfo> FreeDrawingItem::getAnchorInfos()
+{
+    QVector<AnchorPointInfo> infos;
+    foreach (AnchorPointItem *item, m_AnchorPointItems) {
+       infos.append(item->getPointInfo());
+    }
+    return infos;
+}
+
+void FreeDrawingItem::setAnchorInfos(QVector<AnchorPointInfo> infos)
+{
+    // delete all subpath
+    m_subPaths.clear();
+    // delete all anchor point item
+    if(!m_AnchorPointItems.isEmpty())
+    {
+        //method 1
+        while(!m_AnchorPointItems.isEmpty())
+        {
+            AnchorPointItem * ptr = m_AnchorPointItems.takeLast();
+            ptr->deleteCtrl();
+            delete ptr;
+        }
+        // method 2
+//        qDeleteAll(m_AnchorPointItems);
+    }
+
+    // create anchorpointitem by infos
+    {
+
+        //create subpath
+        for(int i = 0; i<infos.count()-2; i++)
+        {
+            AnchorPointInfo curInfo = infos.at(i);
+            AnchorPointInfo postInfo = infos.at(i+1);
+            QPainterPath path = generatePathByInfo(curInfo,postInfo);
+            m_subPaths.append(path);
+        }
+
+        foreach (AnchorPointInfo info, infos)
+        {
+            // create anchor
+            AnchorPointItem * itemNew = new AnchorPointItem(this);
+            itemNew->setPointInfo(info);
+            itemNew->setFreeDrawingItem(this);
+            m_AnchorPointItems.append(itemNew);
+        }
+        updateBoundingRect();
+    }
+}
+
+void FreeDrawingItem::startEditing()
+{
+    qDebug()<<"startEditing";
+    m_startInfos.clear();
+    m_startInfos = getAnchorInfos();
+}
+
+void FreeDrawingItem::endEditing()
+{
+    qDebug()<<"endEditing";
+    auto *cmd = new HHCommandFreeDrawingItemChange(this,m_startInfos);
 }

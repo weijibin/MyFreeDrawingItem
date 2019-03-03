@@ -8,8 +8,11 @@
 #include "controlpointitem.h"
 #include "controllineitem.h"
 
+class FreeDrawingItem;
+
 class AnchorPointItem : public CustomItem
 {
+    friend class ControlPointItem;
 public:
     AnchorPointItem(QGraphicsItem *parent = nullptr);
 
@@ -21,13 +24,26 @@ public:
 
     const  AnchorPointInfo & getPointInfo()  const { return m_info;}
 
-    void setPointInfo(const AnchorPointInfo &info);
+    void setPointInfo(const AnchorPointInfo &info,bool needUpdate = true);
 
-    void setAnchorPos(QPointF pos);
+    void setFreeDrawingItem(FreeDrawingItem * item);
+
+//    void setAnchorPos(QPointF pos);
 
     void setCtrlVisible(bool visible);
 
+    void setState(int state);
+
+    // update the point and  line property by info
     void updatePropertyByInfo();
+
+    // update info by controlpoint pos
+    void updateInfoByPos(const QString &type);
+
+protected:
+    // record Editing state
+    void startEditingAnchor();
+    void endEditingAnchor();
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -47,6 +63,12 @@ private:
 
     ControlLineItem &m_postLineItem;
     ControlPointItem &m_postCtrlPtnItem;
+
+    FreeDrawingItem * m_DrawingItem = nullptr;
+
+    QPointF m_downPoint;
+
+    int m_ID = 0;
 };
 
 #endif // ANCHORPOINTITEM_H
