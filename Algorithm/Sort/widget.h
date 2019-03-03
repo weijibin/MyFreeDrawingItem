@@ -30,10 +30,20 @@ public:
     void insertSort(QVector<int>&vec, int low, int height);
 
     //堆排序
+    void heapSort(QVector<int> &vec);
+
     //希尔排序
+    void shellSort(QVector<int>&vec);
+
     //归并排序
+    void mergeSort(QVector<int> &vec,int low, int height);
+    void merge(QVector<int> &vec, int l,int m, int h);
+
     //基数排序
+    void radixSort(QVector<int> &vec);
+
     //桶排序
+    void bucketSort(QVector<int> &vec);
 
 
 

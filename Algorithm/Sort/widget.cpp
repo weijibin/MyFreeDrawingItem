@@ -21,7 +21,8 @@ Widget::Widget(QWidget *parent) :
 //    quickSort(m_vec,0,size-1);
 //    bubbleSort(m_vec,0,size-1);
 //    selectSort(m_vec,0,size-1);
-    insertSort(m_vec,0,size-1);
+//    insertSort(m_vec,0,size-1);
+    mergeSort(m_vec,0,size-1);
 
     qDebug()<<"after:::"<<m_vec;
 }
@@ -116,5 +117,91 @@ void Widget::insertSort(QVector<int> &vec, int low, int height)
     }
 }
 
+//堆排序
+void Widget::heapSort(QVector<int> &vec)
+{
 
+}
+
+//希尔排序
+void Widget::shellSort(QVector<int>&vec)
+{
+
+}
+
+//归并排序
+void Widget::mergeSort(QVector<int> &vec, int low, int height)
+{
+    int n = (low+height)/2;
+    if(n>low)
+        mergeSort(vec,low,n);
+    if(height>(n+1))
+        mergeSort(vec,n+1,height);
+
+    merge(vec,low,n,height);
+}
+
+void Widget::merge(QVector<int> &vec, int l, int m, int h)
+{
+    QVector<int> tmp1;
+    for(int i = l; i< m+1; i++)
+    {
+        tmp1.append(vec.at(i));
+    }
+
+    QVector<int> tmp2;
+    for(int i = m+1; i<h+1; i++)
+    {
+        tmp2.append(vec.at(i));
+    }
+
+    int size1 = tmp1.size();
+    int size2 = tmp2.size();
+
+    int i1 = 0;
+    int i2 = 0;
+    while( i1<size1 && i2<size2)
+    {
+        if(tmp1.at(i1) < tmp2.at(i2))
+        {
+            vec[l+i1+i2] = tmp1.at(i1);
+            i1++;
+        }
+        else
+        {
+            vec[l+i1+i2] = tmp2.at(i2);
+            i2++;
+        }
+    }
+
+    while(i1<size1)
+    {
+        vec[l+i1+i2] = tmp1.at(i1);
+        i1++;
+    }
+    while(i2<size2)
+    {
+        vec[l+i1+i2] = tmp2.at(i2);
+        i2++;
+    }
+}
+
+
+
+
+
+
+
+
+//基数排序
+void Widget::radixSort(QVector<int> &vec)
+{
+
+}
+
+//桶排序
+void Widget::bucketSort(QVector<int> &vec)
+{
+
+}
 
