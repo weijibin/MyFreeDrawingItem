@@ -22,7 +22,8 @@ Widget::Widget(QWidget *parent) :
 //    bubbleSort(m_vec,0,size-1);
 //    selectSort(m_vec,0,size-1);
 //    insertSort(m_vec,0,size-1);
-    mergeSort(m_vec,0,size-1);
+//    mergeSort(m_vec,0,size-1);
+    shellSort(m_vec);
 
     qDebug()<<"after:::"<<m_vec;
 }
@@ -126,7 +127,39 @@ void Widget::heapSort(QVector<int> &vec)
 //希尔排序
 void Widget::shellSort(QVector<int>&vec)
 {
+    int size = vec.size();
+    for(int gap=size/2; gap>0; gap/=2)
+    {
+        for(int i = gap; i< size; i += 1)
+        {
 
+            int inserted = vec[i];
+            int j;
+            for(j = i-gap; j>=0&&inserted<vec[j]; j-=gap)
+            {
+                vec[j+gap] = vec[j];
+            }
+            vec[j+gap] = inserted;
+
+//            {
+//                for(int j = i; j<size; j+=gap)
+//                {
+//                    int current = vec[j];
+//                    int preIndex = j-gap;
+
+//                    while(preIndex>=0 && current < vec[preIndex])
+//                    {
+//                        vec[preIndex+gap] = vec[preIndex];
+
+//                        preIndex = preIndex - gap;
+//                    }
+
+//                    vec[preIndex+gap] = current;
+
+//                }
+//            }
+        }
+    }
 }
 
 //归并排序
