@@ -22,7 +22,8 @@ Widget::Widget(QWidget *parent) :
 //    bubbleSort(m_vec,0,size-1);
 //    selectSort(m_vec,0,size-1);
 //    insertSort(m_vec,0,size-1);
-    mergeSort(m_vec,0,size-1);
+//    mergeSort(m_vec,0,size-1);
+    heapSort(m_vec);
 
     qDebug()<<"after:::"<<m_vec;
 }
@@ -120,7 +121,54 @@ void Widget::insertSort(QVector<int> &vec, int low, int height)
 //堆排序
 void Widget::heapSort(QVector<int> &vec)
 {
+    buildBigTree(vec);
 
+    int size = vec.size();
+
+    for(int j = size-1; j > 0; j--)
+    {
+        swap(vec,0,j);
+        adjustBigTree(vec,0,j);
+    }
+}
+
+void Widget::buildBigTree(QVector<int> &vec)
+{
+    int size = vec.size();
+    int last = size/2 -1;
+
+    for(int i = last; i>-1; i--)
+   {
+        adjustBigTree(vec,i,size);
+   }
+}
+
+void Widget::adjustBigTree(QVector<int> &vec, int root,int size)
+{
+    int left = root*2 + 1;
+    int right = root *2 + 2;
+    int largest = root;
+    if(right<(size) && vec.at(right) > vec.at(largest))
+    {
+        largest = right;
+    }
+    if(left<(size) && vec.at(left) > vec.at(largest))
+    {
+        largest = left;
+    }
+
+    if(largest != root)
+    {
+        swap(vec,root,largest);
+        adjustBigTree(vec,largest,size);
+    }
+}
+
+void Widget::swap(QVector<int> &vec, int a, int b)
+{
+    int temp = vec.at(a);
+    vec[a] = vec[b];
+    vec[b] = temp;
 }
 
 //希尔排序

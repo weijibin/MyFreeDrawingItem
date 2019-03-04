@@ -31,6 +31,11 @@ public:
 
     //堆排序
     void heapSort(QVector<int> &vec);
+    void buildBigTree(QVector<int> &vec);
+
+    void adjustBigTree(QVector<int> & vec,int root,int size);
+
+    void swap(QVector<int> &vec, int a, int b);
 
     //希尔排序
     void shellSort(QVector<int>&vec);
