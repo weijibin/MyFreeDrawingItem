@@ -39,6 +39,7 @@ public:
 
     //希尔排序
     void shellSort(QVector<int>&vec);
+    void shellSort1(QVector<int>&vec);
 
     //归并排序
     void mergeSort(QVector<int> &vec,int low, int height);

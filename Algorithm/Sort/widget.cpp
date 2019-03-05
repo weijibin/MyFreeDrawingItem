@@ -10,10 +10,10 @@ Widget::Widget(QWidget *parent) :
 
     m_vec.append(3);
     m_vec.append(4);
-    m_vec.append(5);
+    m_vec.append(2);
     m_vec.append(2);
     m_vec.append(1);
-    m_vec.append(4);
+    m_vec.append(7);
 
     qDebug()<<"before:::"<<m_vec;
 
@@ -23,7 +23,9 @@ Widget::Widget(QWidget *parent) :
 //    selectSort(m_vec,0,size-1);
 //    insertSort(m_vec,0,size-1);
 //    mergeSort(m_vec,0,size-1);
-    heapSort(m_vec);
+//    heapSort(m_vec);
+//    shellSort(m_vec);
+    shellSort1(m_vec);
 
     qDebug()<<"after:::"<<m_vec;
 }
@@ -175,6 +177,24 @@ void Widget::swap(QVector<int> &vec, int a, int b)
 void Widget::shellSort(QVector<int>&vec)
 {
 
+}
+void Widget::shellSort1(QVector<int>&vec)
+{
+    int size = vec.size();
+    for(int gap = size/2; gap>0 ; gap /=2)
+    {
+        for(int i = gap; i<size; i++)
+        {
+            int current = vec[i];
+            int preIndex = i-gap;
+            while(preIndex>=0 && vec.at(preIndex) > current)
+            {
+                vec[preIndex+gap] = vec[preIndex];
+                preIndex -= gap;
+            }
+            vec[preIndex+gap] = current;
+        }
+    }
 }
 
 //归并排序
