@@ -51,6 +51,9 @@ public:
     //桶排序
     void bucketSort(QVector<int> &vec);
 
+    //计数排序
+    void countingSort(QVector<int> &vec);
+
 
 
 private:

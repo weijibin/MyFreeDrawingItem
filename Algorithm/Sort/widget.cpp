@@ -1,6 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include <QDebug>
+#include <stdio.h>
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -25,9 +26,20 @@ Widget::Widget(QWidget *parent) :
 //    mergeSort(m_vec,0,size-1);
 //    heapSort(m_vec);
 //    shellSort(m_vec);
-    shellSort1(m_vec);
+//    shellSort1(m_vec);
+
+//    countingSort(m_vec);
+
+    bucketSort(m_vec);
 
     qDebug()<<"after:::"<<m_vec;
+
+//    {
+//        unsigned int a = 0xf7;
+//        unsigned char i = (unsigned char)a;
+//        char* b = (char*)&a;
+//        printf("%08x, %08x\n", i, *b);
+//    }
 }
 
 Widget::~Widget()
@@ -255,11 +267,47 @@ void Widget::merge(QVector<int> &vec, int l, int m, int h)
 }
 
 
+//计数排序  整数 ，且支持 负数
+void Widget::countingSort(QVector<int> &vec)
+{
+    int minValue = vec.at(0);
+    int maxValue = vec.at(0);
+    int i = 1;
+    while(i<vec.size())
+    {
+        if(vec.at(i) < minValue)
+            minValue = vec.at(i);
+        if(vec.at(i) > maxValue)
+            maxValue = vec.at(i);
+        i++;
+    }
 
+    QVector<int> bucket(maxValue-minValue+1);
+    qDebug()<<bucket.size();
+    qDebug()<<"Bucket::::"<<bucket;
 
+    int offset = minValue;
 
+    int size = vec.size();
+    for(int i = 0; i<size; i++)
+    {
+//        if(!bucket[vec.at(i)])
+//            bucket[vec.at(i)] = 0;   //如果当前索引下value 不为零  则重置为 0
+        bucket[vec.at(i) - offset]++;
+    }
 
-
+    int index = 0;
+    for(int j = 0; j<bucket.size(); j++)
+    {
+        int count = bucket.at(j);
+        while (count > 0)
+        {
+            vec[index] = j+offset;
+            count --;
+            index++;
+        }
+    }
+}
 
 //基数排序
 void Widget::radixSort(QVector<int> &vec)
@@ -270,6 +318,40 @@ void Widget::radixSort(QVector<int> &vec)
 //桶排序
 void Widget::bucketSort(QVector<int> &vec)
 {
+    if(vec.size() ==0)
+        return;
+    int minValue = vec.at(0);
+    int maxValue = vec.at(0);
+    for(int i = 0; i<vec.size(); i++)
+    {
+        if(minValue > vec.at(i))
+            minValue = vec.at(i);
+        if(maxValue < vec.at(i))
+            maxValue = vec.at(i);
+    }
 
+
+    //分配到各个桶中
+    int defaultBucketSize = 5;
+    int bucketsCount = (maxValue-minValue)/defaultBucketSize + 1;
+    QVector<QVector<int>>buckets(bucketsCount);
+    for(int i = 0; i<vec.size(); i++)
+    {
+        int data = vec.at(i);
+        int index = (data-minValue)/defaultBucketSize;
+        buckets[index].append(data);
+    }
+
+    //每个桶进行插入排序 并 输出
+    vec.clear();
+    for(int i = 0; i<buckets.size(); i++)
+    {
+        insertSort(buckets[i],0,buckets[i].size()-1);
+
+        for(int j = 0; j<buckets.at(i).size(); j++)
+        {
+            vec.append(buckets.at(i).at(j));
+        }
+    }
 }
 
