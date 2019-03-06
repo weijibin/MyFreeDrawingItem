@@ -47,6 +47,8 @@ public:
 
     //基数排序
     void radixSort(QVector<int> &vec);
+    int getDigit(int num,int d);
+    int getAllDigit(int num);
 
     //桶排序
     void bucketSort(QVector<int> &vec);

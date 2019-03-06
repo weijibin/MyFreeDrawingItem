@@ -10,7 +10,7 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
 
     m_vec.append(3);
-    m_vec.append(4);
+    m_vec.append(-4);
     m_vec.append(2);
     m_vec.append(2);
     m_vec.append(1);
@@ -30,7 +30,9 @@ Widget::Widget(QWidget *parent) :
 
 //    countingSort(m_vec);
 
-    bucketSort(m_vec);
+//    bucketSort(m_vec);
+
+    radixSort(m_vec);
 
     qDebug()<<"after:::"<<m_vec;
 
@@ -312,7 +314,83 @@ void Widget::countingSort(QVector<int> &vec)
 //基数排序
 void Widget::radixSort(QVector<int> &vec)
 {
+    if(vec.length() == 0)
+        return;
+    int offset = vec.at(0);
 
+    int i = 1;
+    while(i<vec.size())
+    {
+        if(offset >vec.at(i))
+            offset = vec.at(i);
+        i++;
+    }
+
+    for(int i =0; i<vec.size(); i++)   //全部转换为非负数 来进行排序
+    {
+        vec[i] -= offset;
+    }
+
+    int minValue = vec.at(0);
+    int maxValue = vec.at(0);
+    for(int i = 1; i<vec.size(); i++)
+    {
+        if(maxValue < vec.at(i))
+            maxValue = vec.at(i);
+        if(minValue > vec.at(i))
+            minValue = vec.at(i);
+    }
+
+    int times = getAllDigit(minValue) < getAllDigit(maxValue)? getAllDigit(maxValue):getAllDigit(minValue);
+
+    QVector<QVector<int>> radixs(10);  //0,1,2,3,4,5,6,7,8,9
+
+    for(int i =1; i<times+1; i++)
+    {
+        for(int j =0; j<vec.size(); j++)
+        {
+            int id = getDigit(vec.at(j),i);
+            radixs[id].append(vec.at(j));
+        }
+        int index = 0;
+        for(int m = 0; m<radixs.size(); m++)
+        {
+            int count = radixs.at(m).size();
+            for(int n= 0; n<count; n++)
+            {
+                vec[index] = radixs.at(m).at(n);
+                index++;
+            }
+            radixs[m].clear();
+        }
+    }
+
+    for(int i =0; i<vec.size(); i++)
+    {
+        vec[i] += offset;
+    }
+}
+
+int Widget::getDigit(int num, int d)//1:个位，2:十位 依次类推
+{
+    int ret;
+    while(d--)
+    {
+        ret = num%10;
+        num /=10;
+    }
+    return ret;
+}
+
+int Widget::getAllDigit(int num) //num 为几位数
+{
+    int temp = qAbs(num);
+    int c = 1;
+    while ((temp /= 10) && temp != 0)
+    {
+        c++;
+    }
+    return c;
 }
 
 //桶排序
