@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVector>
 
+
 namespace Ui {
 class Widget;
 }
@@ -19,6 +20,8 @@ public:
     //快速排序
     void quickSort(QVector<int> &vec, int low,int height );
     int partition(QVector<int> &vec, int low,int height);
+
+    void quickSortMy(QVector<int> &vec,int low,int height);
 
     //冒泡排序
     void bubbleSort(QVector<int> &vec,int low, int height);

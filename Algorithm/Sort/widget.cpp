@@ -32,7 +32,9 @@ Widget::Widget(QWidget *parent) :
 
 //    bucketSort(m_vec);
 
-    radixSort(m_vec);
+//    radixSort(m_vec);
+
+    quickSortMy(m_vec,0,size-1);
 
     qDebug()<<"after:::"<<m_vec;
 
@@ -81,6 +83,30 @@ int Widget::partition(QVector<int> &vec, int low, int height)
 }
 
 
+void Widget::quickSortMy(QVector<int> &vec, int low, int height)
+{
+    if(low > height) return;
+    int temp = vec.at(low);
+    int i = low;
+    int j = height;
+    while (i < j)
+    {
+        while(i<j && vec.at(j)>temp)  //如果标兵在最左，则必须先从右向左遍历
+        {
+            j--;
+        }
+        while (i<j && vec.at(i)<=temp)
+        {
+            i++;
+        }
+        swap(vec,i,j);
+    }
+
+    swap(vec,i,low);
+
+    quickSortMy(vec, low,i-1);
+    quickSortMy(vec, i+1,height);
+}
 
 void Widget::bubbleSort(QVector<int> &vec, int low, int height)
 {
