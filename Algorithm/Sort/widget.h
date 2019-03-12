@@ -59,6 +59,9 @@ public:
     //计数排序
     void countingSort(QVector<int> &vec);
 
+    //二分查找
+    int binarySearch(QVector<int> vec, int key);
+
 
 
 private:

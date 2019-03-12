@@ -38,6 +38,9 @@ Widget::Widget(QWidget *parent) :
 
     qDebug()<<"after:::"<<m_vec;
 
+    int ele = 2;
+    qDebug()<<"find Element "<<ele<<"==="<<binarySearch(m_vec,ele);
+
 //    {
 //        unsigned int a = 0xf7;
 //        unsigned char i = (unsigned char)a;
@@ -459,3 +462,30 @@ void Widget::bucketSort(QVector<int> &vec)
     }
 }
 
+int Widget::binarySearch(QVector<int> vec, int key)
+{
+    int low = 0;
+    int height = vec.size()-1;
+    int mid;
+    int ret = -1;
+    while (low<=height)
+    {
+        mid = (low+height)/2;
+        if(vec.at(mid) <  key)
+        {
+            low = mid+1;
+        }
+        else if(vec.at(mid) > key)
+        {
+            height = mid-1;
+        }
+        else
+        {
+            ret = mid;
+            break;
+        }
+    }
+
+    return ret;
+
+}
