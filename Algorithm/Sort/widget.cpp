@@ -1,4 +1,4 @@
-#include "widget.h"
+﻿#include "widget.h"
 #include "ui_widget.h"
 #include <QDebug>
 #include <stdio.h>
@@ -16,7 +16,7 @@ Widget::Widget(QWidget *parent) :
     m_vec.append(1);
     m_vec.append(7);
 
-    qDebug()<<"before:::"<<m_vec;
+//    qDebug()<<"before:::"<<m_vec;
 
     int size = m_vec.size();
 //    quickSort(m_vec,0,size-1);
@@ -34,13 +34,16 @@ Widget::Widget(QWidget *parent) :
 
 //    radixSort(m_vec);
 
-    quickSortMy(m_vec,0,size-1);
+//    quickSortMy(m_vec,0,size-1);
 
-    qDebug()<<"after:::"<<m_vec;
+//    qDebug()<<"after:::"<<m_vec;
 
-    int ele = 2;
-    qDebug()<<"find Element "<<ele<<"==="<<binarySearch(m_vec,ele);
+//    int ele = 2;
+//    qDebug()<<"find Element "<<ele<<"==="<<binarySearch(m_vec,ele);
 
+    QVector<int> vec = {1,1,2,3,3,4,4};
+     qDebug()<<"before:::"<<vec;
+    qDebug()<<singleNonDuplicate(vec);
 //    {
 //        unsigned int a = 0xf7;
 //        unsigned char i = (unsigned char)a;
@@ -52,6 +55,47 @@ Widget::Widget(QWidget *parent) :
 Widget::~Widget()
 {
     delete ui;
+}
+
+int Widget::singleNonDuplicate(QVector<int> &nums)
+{
+    int size = nums.size();
+    int low = 0;
+    int height = size-1;
+    int mid = (low+height)/2;
+    while(mid>low && mid<height)
+    {
+        bool isL = nums[mid] == nums[mid-1] ;
+        bool isR = nums[mid] == nums[mid+1] ;
+        if(!isL && !isR)
+        {
+            return nums[mid];
+        }
+        if(isL)
+        {
+            if((mid-low)%2)
+            {
+                low = mid+1;
+            }
+            else
+            {
+                height= mid;
+            }
+        }
+        if(isR)
+        {
+            if((height-mid)%2)
+            {
+                height = mid -1;
+            }
+            else
+            {
+                low = mid;
+            }
+        }
+        mid = (low+height)/2;
+    }
+    return nums[mid];
 }
 
 void Widget::quickSort(QVector<int> &vec, int low, int height)
