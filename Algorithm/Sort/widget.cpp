@@ -2,6 +2,7 @@
 #include "ui_widget.h"
 #include <QDebug>
 #include <stdio.h>
+#include <QStack>
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -41,9 +42,24 @@ Widget::Widget(QWidget *parent) :
 //    int ele = 2;
 //    qDebug()<<"find Element "<<ele<<"==="<<binarySearch(m_vec,ele);
 
-    QVector<int> vec = {1,1,2,3,3,4,4};
-     qDebug()<<"before:::"<<vec;
-    qDebug()<<singleNonDuplicate(vec);
+//    QVector<int> vec = {1,1,2,3,3,4,4};
+//     qDebug()<<"before:::"<<vec;
+//    qDebug()<<singleNonDuplicate(vec);
+
+//    QVector<int> vec1 = {1,3};
+//    QVector<int> vec2 = {2,4};
+//    qDebug()<<findMedianSortedArrays(vec1,vec2);
+
+    initTree(m_root);
+//    preOrder(m_root);
+//    preOrderNonRecursive(m_root);
+
+//    inOrder(m_root);
+//    inOrderNonRecursive(m_root);
+
+//    postOrder(m_root);
+    postOrderNonRecursive(m_root);
+
 //    {
 //        unsigned int a = 0xf7;
 //        unsigned char i = (unsigned char)a;
@@ -532,4 +548,204 @@ int Widget::binarySearch(QVector<int> vec, int key)
 
     return ret;
 
+}
+
+double Widget::findMedianSortedArrays(QVector<int>& nums1, QVector<int>& nums2) {
+
+        double ret = 0.0;
+
+        int size1 = nums1.size();
+        int size2 = nums2.size();
+        int i =0,j=0;
+        std::vector<int> nums;
+        while(i<size1 && j<size2)
+        {
+            if(nums1[i]<nums2[j])
+            {
+                nums.push_back(nums1[i]);
+                i++;
+            }
+            else
+            {
+                nums.push_back(nums2[j]);
+                j++;
+            }
+        }
+
+        while(i<size1)
+        {
+            nums.push_back(nums1[i]);
+            i++;
+        }
+        while(j<size2)
+        {
+            nums.push_back(nums2[j]);
+            j++;
+        }
+
+        int size = size1+size2;
+        if(size%2)
+        {
+            ret = nums[size/2];
+        }
+        else
+        {
+            double sum = nums[size/2] + nums[(size-1)/2];
+//            int sum = nums[size/2] + nums[(size-1)/2];
+            ret = sum/2;
+        }
+
+        return ret;
+    }
+
+
+void Widget::preOrder(Node *root)
+{
+    if(root == nullptr)
+        return;
+
+    qDebug()<<root->data;
+    if(root->left)
+        preOrder(root->left);
+    if(root->right)
+        preOrder(root->right);
+}
+
+void Widget::inOrder(Node *root)
+{
+    if(root == nullptr)
+        return;
+
+    if(root->left)
+        inOrder(root->left);
+    qDebug()<<root->data;
+    if(root->right)
+        inOrder(root->right);
+}
+
+void Widget::postOrder(Node *root)
+{
+    if(root == nullptr)
+        return;
+
+    if(root->left)
+        postOrder(root->left);
+    if(root->right)
+        postOrder(root->right);
+    qDebug()<<root->data;
+}
+
+
+void Widget::preOrderNonRecursive(Node *root)
+{
+    if(root == nullptr)
+        return;
+
+    QStack<Node*> stack;
+    Node *cur = root;
+
+    while(cur!=nullptr || !stack.isEmpty())
+    {
+        while(cur!=nullptr)
+        {
+            stack.push(cur);
+            qDebug()<<cur->data;
+            cur = cur->left;
+        }
+
+        if(!stack.isEmpty())
+        {
+            Node *t = stack.pop();
+            cur = t->right;
+        }
+    }
+}
+
+void Widget::inOrderNonRecursive(Node *root)
+{
+    if(root == nullptr)
+        return;
+
+    QStack<Node*> stack;
+    Node * cur = root;
+
+    while(cur!=nullptr || !stack.isEmpty())
+    {
+        while(cur!=nullptr)
+        {
+            stack.push(cur);
+            cur  = cur->left;
+        }
+
+        if(!stack.isEmpty())
+        {
+            Node* t = stack.pop();
+            qDebug()<<t->data;
+            cur = t->right;
+        }
+    }
+}
+
+void Widget::postOrderNonRecursive(Node *root)
+{
+    if(root == nullptr)
+        return;
+
+    QStack<Node*> stack;
+    Node *cur = root;
+    Node *lastPop = nullptr;
+
+    while(cur!=nullptr || !stack.isEmpty())
+    {
+        while(cur!=nullptr)
+        {
+            stack.push(cur);
+            cur= cur->left;
+        }
+        if(!stack.isEmpty())
+        {
+            Node * t = stack.top();
+            if(t->right == nullptr || t->right == lastPop)
+            {
+                qDebug()<<t->data;
+                t = stack.pop();
+                lastPop = t;
+                cur = nullptr;
+            }
+            else
+            {
+                cur = t->right;
+            }
+        }
+    }
+
+}
+
+void Widget::initTree(Node * &root)
+{
+    if(root == nullptr)
+    {
+        root = new Node;
+        root->data =1;
+
+        root->left = new Node;
+        root->left->data = 2;
+
+        root->right = new Node;
+        root->right->data = 3;
+
+        root->left->right = new Node;
+        root->left->right->data = 4;
+    }
+}
+
+void Widget::deleteTree(Node *root)
+{
+    if(root != nullptr)
+    {
+        deleteTree(root->left);
+        deleteTree(root->right);
+        delete root;
+        root = nullptr;
+    }
 }

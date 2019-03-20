@@ -9,6 +9,13 @@ namespace Ui {
 class Widget;
 }
 
+struct Node
+{
+    int data;
+    struct Node *left = nullptr;
+    struct Node *right = nullptr;
+} ;
+
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -78,8 +85,45 @@ public:
     ///
     int singleNonDuplicate(QVector<int>& nums);
 
+    ///
+    /// \brief findMedianSortedArrays
+    /// \param nums1
+    /// \param nums2
+    /// \return
+    ///
+    ///给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。
+    /// 请你找出这两个有序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。
+    /// 你可以假设 nums1 和 nums2 不会同时为空。
+    /// 示例 1:
+    /// nums1 = [1, 3]
+    /// nums2 = [2]
+
+    /// 则中位数是 2.0
+    /// 示例 2:
+
+    /// nums1 = [1, 2]
+    /// nums2 = [3, 4]
+    /// 则中位数是 (2 + 3)/2 = 2.5
+    ///
+    double findMedianSortedArrays(QVector<int>&nums1,QVector<int>&nums2);
+
+    ///
+    /// \brief 二叉树的遍历
+    /// 递归与非递归的遍历
+    ///
+    void preOrder(Node*root);
+    void inOrder(Node*root);
+    void postOrder(Node*root);
+    void preOrderNonRecursive(Node*root);
+    void inOrderNonRecursive(Node*root);
+    void postOrderNonRecursive(Node*root);
+
+    void initTree(Node * &root); //指针的引用
+    void deleteTree(Node * root);
 private:
     QVector<int> m_vec;
+
+    Node*m_root = nullptr;
 private:
     Ui::Widget *ui;
 
