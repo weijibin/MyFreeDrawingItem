@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <QStack>
 
+#include "cstack.h"
+#include "cqueue.h"
+
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget)
@@ -66,6 +69,24 @@ Widget::Widget(QWidget *parent) :
 //        char* b = (char*)&a;
 //        printf("%08x, %08x\n", i, *b);
 //    }
+
+    CQueue<int> queue;
+    queue.appendTail(1);
+    queue.appendTail(2);
+    queue.appendTail(3);
+
+    qDebug()<<queue.popHead();
+    qDebug()<<queue.popHead();
+    qDebug()<<queue.popHead();
+
+    CStack<int> stack;
+    stack.appendTail(1);
+    stack.appendTail(2);
+    stack.appendTail(3);
+
+    qDebug()<<stack.popHead();
+    qDebug()<<stack.popHead();
+    qDebug()<<stack.popHead();
 }
 
 Widget::~Widget()
