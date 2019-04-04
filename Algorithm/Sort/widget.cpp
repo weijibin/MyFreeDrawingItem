@@ -66,6 +66,15 @@ Widget::Widget(QWidget *parent) :
 //        char* b = (char*)&a;
 //        printf("%08x, %08x\n", i, *b);
 //    }
+//    connect(this,&Widget::test,this,&Widget::sltTest);
+//    emit test(2);
+
+    testMap();
+}
+
+void Widget::sltTest(int d)
+{
+    qDebug()<<"sltTest:::"<<d;
 }
 
 Widget::~Widget()
@@ -748,4 +757,65 @@ void Widget::deleteTree(Node *root)
         delete root;
         root = nullptr;
     }
+}
+
+void Widget::testMap()
+{
+    qDebug()<<"testMap Start";
+    map<const char*,int> ages;
+    ages["Homer"] = 38;
+    ages["Marge"] = 37;
+    ages["Lisa"] = 8;
+    ages["Maggie"] = 1;
+    ages["Bart"] = 11;
+
+    while( !ages.empty() ) {
+        qDebug() << "Erasing: " << (*ages.begin()).first << ", " << (*ages.begin()).second << endl;
+        ages.erase( ages.begin() );
+    }
+
+
+    map<int,QString> m;
+    m[1]= ("1111111111111111");
+    m[2]= ("2222222222222222");
+    m[3]= ("3333333333333333");
+    m[5]= ("3333333333333333");
+    m[4]= ("4444444444444444");
+    m[0]= ("5555555555555555");
+    map<int,QString>::iterator it;
+
+//    //错误的删除方式
+//    for(it=m.begin();it!=m.end();++it)
+//    {
+//        qDebug()<<"key: "<<it->first <<" value: "<<it->second<<endl;
+//        m.erase(it);
+//    }
+
+    //正确的删除方式
+    ///可以看出（m.erase(it++) ）和（m.erase(it); iter++; ）这个执行序列是不相同的。
+    /// 前者在erase执行前进行了加操作，在it被删除(失效)前进行了加操作，是安全的；
+    /// 后者是在erase执行后才进行加操作，而此时iter已经被删除(当前的迭代器已经失效了)，
+    /// 对一个已经失效的迭代器进行加操作，行为是不可预期的，这种写法势必会导致 map操作的失败并引起进程的异常。
+
+//    for(it=m.begin(); it!=m.end();)
+//    {
+//        qDebug()<<"key: "<<it->first <<" value: "<<it->second<<endl;
+//        m.erase(it++);
+//    }
+
+    //删除指定value的元素
+    for(it=m.begin(); it!=m.end();)
+    {
+        if(it->second == "3333333333333333")
+        {
+            qDebug()<<"erase===="<<"key: "<<it->first <<" value: "<<it->second<<endl;
+            m.erase(it++);
+        }
+        else
+        {
+            it++;
+        }
+    }
+
+    qDebug()<<"testMap end";
 }

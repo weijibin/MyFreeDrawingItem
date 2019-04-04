@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include <QVector>
-
+#include <map>
+#include <string>
+using namespace std;
 
 namespace Ui {
 class Widget;
@@ -23,6 +25,10 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
+
+
+    //测试map 属性
+    void testMap();
 
     //快速排序
     void quickSort(QVector<int> &vec, int low,int height );
@@ -120,6 +126,11 @@ public:
 
     void initTree(Node * &root); //指针的引用
     void deleteTree(Node * root);
+
+signals:
+    void test(int );
+public slots:
+    void sltTest(int);
 private:
     QVector<int> m_vec;
 
