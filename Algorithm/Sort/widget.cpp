@@ -1,5 +1,7 @@
 ﻿#include "widget.h"
 #include "ui_widget.h"
+#include "cstack.h"
+#include "cqueue.h"
 #include <QDebug>
 #include <stdio.h>
 #include <QStack>
@@ -70,6 +72,24 @@ Widget::Widget(QWidget *parent) :
 //    emit test(2);
 
     testMap();
+
+    CQueue<int> queue;
+    queue.appendTail(1);
+    queue.appendTail(2);
+    queue.appendTail(3);
+
+    qDebug()<<queue.popHead();
+    qDebug()<<queue.popHead();
+    qDebug()<<queue.popHead();
+
+    CStack<int> stack;
+    stack.appendTail(1);
+    stack.appendTail(2);
+    stack.appendTail(3);
+
+    qDebug()<<stack.popHead();
+    qDebug()<<stack.popHead();
+    qDebug()<<stack.popHead();
 }
 
 void Widget::sltTest(int d)
@@ -819,3 +839,6 @@ void Widget::testMap()
 
     qDebug()<<"testMap end";
 }
+
+
+
