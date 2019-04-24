@@ -3,7 +3,8 @@
 #include "windowsx.h"
 #include "Windows.h"
 #include "WinUser.h"
-
+#include <QMouseEvent>
+#include <QDebug>
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -16,6 +17,24 @@ Widget::Widget(QWidget *parent) :
 Widget::~Widget()
 {
     delete ui;
+}
+
+void Widget::mousePressEvent(QMouseEvent *event)
+{
+    if(event->buttons() & Qt::LeftButton)
+    {
+        m_offset = event->globalPos() - frameGeometry().topLeft();
+        event->accept();
+    }
+}
+
+void Widget::mouseMoveEvent(QMouseEvent *event)
+{
+    if(event->buttons() & Qt::LeftButton)
+    {
+        move(event->globalPos() - m_offset);
+        event->accept();
+    }
 }
 
 bool Widget::nativeEvent(const QByteArray &eventType, void *message, long *result)
