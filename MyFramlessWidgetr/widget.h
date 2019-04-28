@@ -2,6 +2,8 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <qprogressbar.h>
+#include <QTimeLine>
 
 namespace Ui {
 class Widget;
@@ -19,10 +21,16 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::Widget *ui;
     int m_shadowSize = 5;
     QPoint m_offset = QPoint();
+
+    QTimeLine * m_timeLine = nullptr;
+    QProgressBar * m_bar = nullptr;
 };
 
 #endif // WIDGET_H

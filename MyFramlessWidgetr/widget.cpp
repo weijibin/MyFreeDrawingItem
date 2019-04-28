@@ -1,7 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include "windowsx.h"
-#include "Windows.h"
+#include "windows.h"
 #include "WinUser.h"
 #include <QMouseEvent>
 #include <QDebug>
@@ -12,6 +12,21 @@ Widget::Widget(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
+
+
+    m_timeLine = new QTimeLine(2000,this);
+    m_timeLine->setFrameRange(0,100);
+
+    m_bar = new QProgressBar(this);
+    m_bar->setRange(0,100);
+    this->layout()->addWidget(m_bar);
+
+    connect(m_timeLine,SIGNAL(frameChanged(int)),m_bar,SLOT(setValue(int)));
+
+    connect(m_timeLine,&QTimeLine::frameChanged,[=](int value){
+        qDebug()<<"frameChanged<<<<"<<value;
+    });
+
 }
 
 Widget::~Widget()
@@ -123,4 +138,10 @@ bool Widget::nativeEvent(const QByteArray &eventType, void *message, long *resul
         }
     }
     return false;
+}
+
+void Widget::on_pushButton_clicked()
+{
+    if(m_timeLine)
+        m_timeLine->start();
 }
